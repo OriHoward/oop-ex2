@@ -1,19 +1,33 @@
 import api.EdgeData;
 
+import java.util.ArrayList;
+
 public class GraphEdge implements EdgeData {
+    private int source;
+    private int dest;
+    private double weight;
+    private ArrayList<GraphEdge> edges;
+
+    public GraphEdge(int source, int dest, double weight) {
+        this.source = source;
+        this.dest = dest;
+        this.weight = weight;
+        this.edges = new ArrayList<>();
+    }
+
     @Override
     public int getSrc() {
-        return 0;
+        return this.source;
     }
 
     @Override
     public int getDest() {
-        return 0;
+        return this.dest;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.weight;
     }
 
     @Override
