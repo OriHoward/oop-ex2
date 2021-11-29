@@ -2,7 +2,12 @@ import api.GeoLocation;
 import api.NodeData;
 
 public class GraphNode implements NodeData {
+    private int pos;
+    private int id;
 
+    public GraphNode (int pos, int id) {
+
+    }
     @Override
     public int getKey() {
         return 0;
