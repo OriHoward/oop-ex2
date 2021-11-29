@@ -1,7 +1,15 @@
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -10,9 +18,9 @@ public class DirectedGraph implements DirectedWeightedGraph {
     private int numOfEdges;
     HashMap<Integer, GraphNode> nodeMap;
 
-    public DirectedGraph(int MCount, int numOfEdges, HashMap<Integer, GraphNode> nodeMap) {
+    public DirectedGraph() {
         this.MCount = 0;
-        this.numOfEdges = numOfEdges;
+        this.numOfEdges = 0;
         this.nodeMap = new HashMap<>();
     }
 
@@ -21,6 +29,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
         return nodeMap.get(key);
 
     }
+
     @Override
     public EdgeData getEdge(int src, int dest) {
         return null;
@@ -74,5 +83,20 @@ public class DirectedGraph implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return 0;
+    }
+
+    public void loadGraph(String filename) {
+        try {
+            Gson gson = new Gson();
+            Reader reader = Files.newBufferedReader(Paths.get(filename));
+            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+            ArrayList<GraphEdge> edgez = new ArrayList<>(Arrays.asList(gson.fromJson(jsonObject.get("Edges"), GraphEdge[].class)));
+            ArrayList<GraphNode> nodez = new ArrayList<>(Arrays.asList(gson.fromJson(jsonObject.get("Nodes"), GraphNode[].class)));
+
+            reader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
