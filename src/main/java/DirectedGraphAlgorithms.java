@@ -6,6 +6,8 @@ import java.util.List;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
+    DirectedGraph currGraph;
+
 
     @Override
     public void init(DirectedWeightedGraph g) {
