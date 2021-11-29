@@ -8,7 +8,7 @@ public class GraphEdge implements EdgeData {
     private double weight;
     private ArrayList<GraphEdge> edges;
 
-    public GraphEdge(int source, int dest, double weight, ArrayList<GraphEdge> edges) {
+    public GraphEdge(int source, int dest, double weight) {
         this.source = source;
         this.dest = dest;
         this.weight = weight;
