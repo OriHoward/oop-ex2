@@ -20,6 +20,7 @@ public class GraphNode implements NodeData {
 
     }
 
+    // todo - Node with minimal weight is always first.
     public void addDest(GraphEdge edge) {
         destMap.get(edge.getDest()).add(edge);
     }
@@ -69,7 +70,6 @@ public class GraphNode implements NodeData {
 
     @Override
     public void setInfo(String s) {
-
     }
 
     @Override
