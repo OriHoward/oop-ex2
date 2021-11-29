@@ -4,7 +4,9 @@ import api.NodeData;
 
 import java.util.List;
 
-public class GraphAlgorithms implements DirectedWeightedGraphAlgorithms {
+public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
+
+
     @Override
     public void init(DirectedWeightedGraph g) {
 
