@@ -134,7 +134,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
         return MCount;
     }
 
-    public void loadGraph(String filename) {
+    public boolean loadGraph(String filename) {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(filename));
@@ -166,10 +166,11 @@ public class DirectedGraph implements DirectedWeightedGraph {
                 srcNode.addDest(edge);
                 dstNode.addSrc(edge);
             }
-            System.out.println("a;sldkfjas;ldkfja;sdlkfj");
+            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

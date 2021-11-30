@@ -11,7 +11,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public void init(DirectedWeightedGraph g) {
-
     }
 
     @Override
@@ -56,6 +55,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public boolean load(String file) {
-        return false;
+        DirectedGraph g = new DirectedGraph();
+        return g.loadGraph(file);
     }
 }
