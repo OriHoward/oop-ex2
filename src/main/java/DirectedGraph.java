@@ -10,7 +10,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -18,7 +17,7 @@ import java.util.Iterator;
 public class DirectedGraph implements DirectedWeightedGraph {
     private int MCount;
     private int numOfEdges;
-    HashMap<Integer, GraphNode> nodeMap;
+    HashMap<Integer, NodeData> nodeMap;
 
     public DirectedGraph() {
         this.MCount = 0;
@@ -34,12 +33,21 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return null;
+        GraphNode node = (GraphNode) nodeMap.get(src);
+        if (node == null) {
+            return null;
+        }
+        if (node.getDestMap().get(dest) == null) {
+            return null;
+        }
+        return node.getDestMap().get(dest);
     }
 
     @Override
     public void addNode(NodeData n) {
-
+        if (n != null) {
+            this.nodeMap.put(n.getKey(),n);
+        }
     }
 
     @Override
@@ -116,8 +124,8 @@ public class DirectedGraph implements DirectedWeightedGraph {
             reader.close();
 
             for (GraphEdge edge : parsedEdges) {
-                GraphNode srcNode = this.nodeMap.get(edge.getSrc());
-                GraphNode dstNode = this.nodeMap.get(edge.getDest());
+                GraphNode srcNode = (GraphNode) this.nodeMap.get(edge.getSrc());
+                GraphNode dstNode = (GraphNode) this.nodeMap.get(edge.getDest());
                 srcNode.addDest(edge);
                 dstNode.addSrc(edge);
             }

@@ -1,15 +1,15 @@
+import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GraphNode implements NodeData {
     private GeoLocation location;
     private int id;
     private double weight;
-    private HashMap<Integer, GraphEdge> destMap;
-    private HashMap<Integer, GraphEdge> sourceMap;
+    private HashMap<Integer, EdgeData> destMap;
+    private HashMap<Integer, EdgeData> sourceMap;
 
     public GraphNode(GeoLocation location, int id) {
         this.location = new NodeLocation(location.x(), location.y(), location.z());
@@ -20,29 +20,29 @@ public class GraphNode implements NodeData {
 
     }
 
-    public HashMap<Integer, GraphEdge> getDestMap() {
+    public HashMap<Integer, EdgeData> getDestMap() {
         return destMap;
     }
 
-    public HashMap<Integer, GraphEdge> getSourceMap() {
+    public HashMap<Integer, EdgeData> getSourceMap() {
         return sourceMap;
     }
 
 
-    public void addDest(GraphEdge edge) {
+    public void addDest(EdgeData edge) {
         this.destMap.put(edge.getDest(), edge);
     }
 
-    public void addSrc(GraphEdge edge) {
+    public void addSrc(EdgeData edge) {
         this.sourceMap.put(edge.getSrc(), edge);
 
     }
 
-    public void removeDest(GraphEdge edge) {
+    public void removeDest(EdgeData edge) {
         destMap.remove(edge.getDest());
     }
 
-    public void removeSrc(GraphEdge edge) {
+    public void removeSrc(EdgeData edge) {
         sourceMap.get(edge.getSrc());
     }
 
