@@ -30,22 +30,31 @@ public class GraphNode implements NodeData {
 
 
     public void addDest(GraphEdge edge) {
-        if (!destMap.isEmpty()) {
-            if (destMap.get(edge.getDest()).get(0).getWeight() > edge.getWeight()) {
-                destMap.get(edge.getDest()).add(0, edge);
-            }
+
+        ArrayList<GraphEdge> currDestEdges = this.destMap.get(edge.getDest());
+        if (currDestEdges == null) {
+            currDestEdges = new ArrayList<>();
+            currDestEdges.add(edge);
+            this.destMap.put(edge.getDest(), currDestEdges);
+        } else if (edge.getWeight() < currDestEdges.get(0).getWeight()) {
+            currDestEdges.add(0, edge);
         } else {
-            destMap.get(edge.getDest()).add(edge);
+            currDestEdges.add(edge);
         }
     }
 
     public void addSrc(GraphEdge edge) {
-        if (!sourceMap.isEmpty()) {
-            if (sourceMap.get(edge.getSrc()).get(0).getWeight() > edge.getWeight()) {
-                sourceMap.get(edge.getSrc()).add(0, edge);
-            }
-        } else {
-            sourceMap.get(edge.getSrc()).add(edge);
+        ArrayList<GraphEdge> currNodeSources = this.sourceMap.get(edge.getSrc());
+        if (currNodeSources == null) {
+            currNodeSources = new ArrayList<>();
+            currNodeSources.add(edge);
+            this.sourceMap.put(edge.getSrc(),currNodeSources);
+        }
+        else if (edge.getWeight() < currNodeSources.get(0).getWeight()) {
+            currNodeSources.add(0,edge);
+        }
+        else {
+            currNodeSources.add(edge);
         }
 
     }

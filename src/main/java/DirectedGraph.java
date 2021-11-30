@@ -2,6 +2,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -91,10 +92,36 @@ public class DirectedGraph implements DirectedWeightedGraph {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(filename));
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-            ArrayList<GraphEdge> edgez = new ArrayList<>(Arrays.asList(gson.fromJson(jsonObject.get("Edges"), GraphEdge[].class)));
-            ArrayList<GraphNode> nodez = new ArrayList<>(Arrays.asList(gson.fromJson(jsonObject.get("Nodes"), GraphNode[].class)));
-
+            ArrayList<GraphEdge> parsedEdges = new ArrayList<>();
+            for (JsonElement currEdgeElem : jsonObject.get("Edges").getAsJsonArray()) {
+                JsonObject edgeObject = currEdgeElem.getAsJsonObject();
+                parsedEdges.add(new GraphEdge(
+                        edgeObject.get("src").getAsInt(),
+                        edgeObject.get("dest").getAsInt(),
+                        edgeObject.get("w").getAsDouble()
+                ));
+            }
+            for (JsonElement currNodeElem : jsonObject.get("Nodes").getAsJsonArray()) {
+                JsonObject nodeObject = currNodeElem.getAsJsonObject();
+                String[] posParts = nodeObject.get("pos").getAsString().split(",");
+                GraphNode currNode = new GraphNode(
+                        new NodeLocation(
+                                Double.parseDouble(posParts[0]),
+                                posParts.length > 1 ? Double.parseDouble(posParts[1]) : 0,
+                                posParts.length > 2 ? Double.parseDouble(posParts[2]) : 0),
+                        nodeObject.get("id").getAsInt()
+                );
+                this.nodeMap.put(currNode.getKey(), currNode);
+            }
             reader.close();
+
+            for (GraphEdge edge : parsedEdges) {
+                GraphNode srcNode = this.nodeMap.get(edge.getSrc());
+                GraphNode dstNode = this.nodeMap.get(edge.getDest());
+                srcNode.addDest(edge);
+                dstNode.addSrc(edge);
+            }
+            System.out.println("a;sldkfjas;ldkfja;sdlkfj");
 
         } catch (IOException e) {
             e.printStackTrace();
