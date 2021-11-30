@@ -56,8 +56,13 @@ public class DirectedGraph implements DirectedWeightedGraph {
         GraphNode srcNode = (GraphNode) nodeMap.get(src);
         GraphNode destNode = (GraphNode) nodeMap.get(dest);
         GraphEdge edge = new GraphEdge(src, dest, w);
+        //we need to check if that is a new node, or it overrides an existing one
+        if (srcNode.getDestMap().get(dest) == null) {
+            numOfEdges++;
+        }
         srcNode.addDest(edge);
         destNode.addSrc(edge);
+        MCount++;
     }
 
     @Override
@@ -77,8 +82,25 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
-        return null;
+        GraphNode currNode = (GraphNode) this.nodeMap.get(key);
+        //remove this node from the dest mapping of each father
+        currNode.getSourceMap().keySet().forEach(nodeKey -> {
+            GraphNode currFather = (GraphNode) this.nodeMap.get(nodeKey);
+            currFather.removeDest(currFather.getKey());
+            MCount++;
+            numOfEdges--;
+        });
+        //remove this node from each source map of its children
+        currNode.getDestMap().keySet().forEach(nodeKey -> {
+            GraphNode currChild = (GraphNode) this.nodeMap.get(nodeKey);
+            currChild.removeSrc(currChild.getKey());
+            MCount++;
+            numOfEdges--;
+        });
+        MCount++;
+        return this.nodeMap.remove(key);
     }
+
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
@@ -91,22 +113,24 @@ public class DirectedGraph implements DirectedWeightedGraph {
         if (removedEdge == null) {
             return null;
         }
+        MCount++;
+        numOfEdges--;
         return destNode.removeSrc(src);
     }
 
     @Override
     public int nodeSize() {
-        return 0;
+        return this.nodeMap.size();
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        return numOfEdges;
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return MCount;
     }
 
     public void loadGraph(String filename) {
@@ -142,6 +166,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
                 GraphNode dstNode = (GraphNode) this.nodeMap.get(edge.getDest());
                 srcNode.addDest(edge);
                 dstNode.addSrc(edge);
+                numOfEdges++;
             }
             System.out.println("a;sldkfjas;ldkfja;sdlkfj");
 
