@@ -8,8 +8,8 @@ public class GraphNode implements NodeData {
     private GeoLocation location;
     private int id;
     private double weight;
-    private HashMap<Integer, ArrayList<GraphEdge>> destMap;
-    private HashMap<Integer, ArrayList<GraphEdge>> sourceMap;
+    private HashMap<Integer, GraphEdge> destMap;
+    private HashMap<Integer, GraphEdge> sourceMap;
 
     public GraphNode(GeoLocation location, int id) {
         this.location = new NodeLocation(location.x(), location.y(), location.z());
@@ -20,51 +20,30 @@ public class GraphNode implements NodeData {
 
     }
 
-    public HashMap<Integer, ArrayList<GraphEdge>> getDestMap() {
+    public HashMap<Integer, GraphEdge> getDestMap() {
         return destMap;
     }
 
-    public HashMap<Integer, ArrayList<GraphEdge>> getSourceMap() {
+    public HashMap<Integer, GraphEdge> getSourceMap() {
         return sourceMap;
     }
 
 
     public void addDest(GraphEdge edge) {
-
-        ArrayList<GraphEdge> currDestEdges = this.destMap.get(edge.getDest());
-        if (currDestEdges == null) {
-            currDestEdges = new ArrayList<>();
-            currDestEdges.add(edge);
-            this.destMap.put(edge.getDest(), currDestEdges);
-        } else if (edge.getWeight() < currDestEdges.get(0).getWeight()) {
-            currDestEdges.add(0, edge);
-        } else {
-            currDestEdges.add(edge);
-        }
+        this.destMap.put(edge.getDest(), edge);
     }
 
     public void addSrc(GraphEdge edge) {
-        ArrayList<GraphEdge> currNodeSources = this.sourceMap.get(edge.getSrc());
-        if (currNodeSources == null) {
-            currNodeSources = new ArrayList<>();
-            currNodeSources.add(edge);
-            this.sourceMap.put(edge.getSrc(),currNodeSources);
-        }
-        else if (edge.getWeight() < currNodeSources.get(0).getWeight()) {
-            currNodeSources.add(0,edge);
-        }
-        else {
-            currNodeSources.add(edge);
-        }
+        this.sourceMap.put(edge.getSrc(), edge);
 
     }
 
     public void removeDest(GraphEdge edge) {
-        destMap.get(edge.getSrc()).remove(edge);
+        destMap.remove(edge.getDest());
     }
 
     public void removeSrc(GraphEdge edge) {
-        sourceMap.get(edge.getSrc()).remove(edge);
+        sourceMap.get(edge.getSrc());
     }
 
     @Override
