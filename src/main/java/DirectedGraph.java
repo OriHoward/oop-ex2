@@ -16,13 +16,13 @@ import java.util.Iterator;
 
 public class DirectedGraph implements DirectedWeightedGraph {
     private int MCount;
-    private int numOfEdges;
     HashMap<Integer, NodeData> nodeMap;
+    ArrayList<EdgeData> parsedEdges;
 
     public DirectedGraph() {
         this.MCount = 0;
-        this.numOfEdges = 0;
         this.nodeMap = new HashMap<>();
+        parsedEdges = new ArrayList<>();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
         GraphEdge edge = new GraphEdge(src, dest, w);
         //we need to check if that is a new node, or it overrides an existing one
         if (srcNode.getDestMap().get(dest) == null) {
-            numOfEdges++;
+            parsedEdges.add(edge);
         }
         srcNode.addDest(edge);
         destNode.addSrc(edge);
@@ -67,17 +67,18 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+        return this.nodeMap.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        return parsedEdges.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        GraphNode currNode = (GraphNode) this.nodeMap.get(node_id);
+        return currNode.getDestMap().values().iterator();
     }
 
     @Override
@@ -86,16 +87,16 @@ public class DirectedGraph implements DirectedWeightedGraph {
         //remove this node from the dest mapping of each father
         currNode.getSourceMap().keySet().forEach(nodeKey -> {
             GraphNode currFather = (GraphNode) this.nodeMap.get(nodeKey);
-            currFather.removeDest(currFather.getKey());
+            EdgeData removedEdge = currFather.removeDest(currFather.getKey());
             MCount++;
-            numOfEdges--;
+            parsedEdges.remove(removedEdge);
         });
         //remove this node from each source map of its children
         currNode.getDestMap().keySet().forEach(nodeKey -> {
             GraphNode currChild = (GraphNode) this.nodeMap.get(nodeKey);
-            currChild.removeSrc(currChild.getKey());
+            EdgeData removedEdge = currChild.removeSrc(currChild.getKey());
             MCount++;
-            numOfEdges--;
+            parsedEdges.remove(removedEdge);
         });
         MCount++;
         return this.nodeMap.remove(key);
@@ -114,7 +115,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
             return null;
         }
         MCount++;
-        numOfEdges--;
+        parsedEdges.remove(removedEdge);
         return destNode.removeSrc(src);
     }
 
@@ -125,7 +126,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public int edgeSize() {
-        return numOfEdges;
+        return parsedEdges.size();
     }
 
     @Override
@@ -138,7 +139,6 @@ public class DirectedGraph implements DirectedWeightedGraph {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(filename));
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-            ArrayList<GraphEdge> parsedEdges = new ArrayList<>();
             for (JsonElement currEdgeElem : jsonObject.get("Edges").getAsJsonArray()) {
                 JsonObject edgeObject = currEdgeElem.getAsJsonObject();
                 parsedEdges.add(new GraphEdge(
@@ -160,13 +160,11 @@ public class DirectedGraph implements DirectedWeightedGraph {
                 this.nodeMap.put(currNode.getKey(), currNode);
             }
             reader.close();
-
-            for (GraphEdge edge : parsedEdges) {
+            for (EdgeData edge : parsedEdges) {
                 GraphNode srcNode = (GraphNode) this.nodeMap.get(edge.getSrc());
                 GraphNode dstNode = (GraphNode) this.nodeMap.get(edge.getDest());
                 srcNode.addDest(edge);
                 dstNode.addSrc(edge);
-                numOfEdges++;
             }
             System.out.println("a;sldkfjas;ldkfja;sdlkfj");
 
