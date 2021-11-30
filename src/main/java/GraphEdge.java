@@ -1,7 +1,5 @@
 import api.EdgeData;
 
-import java.util.ArrayList;
-
 public class GraphEdge implements EdgeData {
     private int source;
     private int dest;
@@ -30,7 +28,7 @@ public class GraphEdge implements EdgeData {
 
     @Override
     public String getInfo() {
-        return null;
+        return "source: " + getSrc() + " dest: " + getDest() + " weight: " + getWeight();
     }
 
     @Override

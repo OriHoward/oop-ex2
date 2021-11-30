@@ -11,10 +11,10 @@ public class GraphNode implements NodeData {
     private HashMap<Integer, ArrayList<GraphEdge>> destMap;
     private HashMap<Integer, ArrayList<GraphEdge>> sourceMap;
 
-    public GraphNode(GeoLocation location, int id, double weight) {
+    public GraphNode(GeoLocation location, int id) {
         this.location = new NodeLocation(location.x(), location.y(), location.z());
         this.id = id;
-        this.weight = weight;
+        this.weight = 0;
         this.destMap = new HashMap<>();
         this.sourceMap = new HashMap<>();
 
@@ -28,13 +28,26 @@ public class GraphNode implements NodeData {
         return sourceMap;
     }
 
-    // todo - Node with minimal weight is always first.
+
     public void addDest(GraphEdge edge) {
-        destMap.get(edge.getDest()).add(edge);
+        if (!destMap.isEmpty()) {
+            if (destMap.get(edge.getDest()).get(0).getWeight() > edge.getWeight()) {
+                destMap.get(edge.getDest()).add(0, edge);
+            }
+        } else {
+            destMap.get(edge.getDest()).add(edge);
+        }
     }
 
     public void addSrc(GraphEdge edge) {
-        sourceMap.get(edge.getSrc()).add(edge);
+        if (!sourceMap.isEmpty()) {
+            if (sourceMap.get(edge.getSrc()).get(0).getWeight() > edge.getWeight()) {
+                sourceMap.get(edge.getSrc()).add(0, edge);
+            }
+        } else {
+            sourceMap.get(edge.getSrc()).add(edge);
+        }
+
     }
 
     public void removeDest(GraphEdge edge) {
