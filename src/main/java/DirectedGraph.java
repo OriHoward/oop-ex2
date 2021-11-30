@@ -46,13 +46,18 @@ public class DirectedGraph implements DirectedWeightedGraph {
     @Override
     public void addNode(NodeData n) {
         if (n != null) {
-            this.nodeMap.put(n.getKey(),n);
+            this.nodeMap.put(n.getKey(), n);
+            MCount++;
         }
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-
+        GraphNode srcNode = (GraphNode) nodeMap.get(src);
+        GraphNode destNode = (GraphNode) nodeMap.get(dest);
+        GraphEdge edge = new GraphEdge(src, dest, w);
+        srcNode.addDest(edge);
+        destNode.addSrc(edge);
     }
 
     @Override
@@ -77,7 +82,16 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+        GraphNode srcNode = (GraphNode) nodeMap.get(src);
+        GraphNode destNode = (GraphNode) nodeMap.get(dest);
+        if (srcNode == null || destNode == null) {
+            return null;
+        }
+        EdgeData removedEdge = srcNode.removeDest(dest);
+        if (removedEdge == null) {
+            return null;
+        }
+        return destNode.removeSrc(src);
     }
 
     @Override

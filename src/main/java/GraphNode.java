@@ -38,12 +38,12 @@ public class GraphNode implements NodeData {
 
     }
 
-    public void removeDest(EdgeData edge) {
-        destMap.remove(edge.getDest());
+    public EdgeData removeDest(int dest) {
+        return destMap.remove(dest);
     }
 
-    public void removeSrc(EdgeData edge) {
-        sourceMap.get(edge.getSrc());
+    public EdgeData removeSrc(int source) {
+        return sourceMap.remove(source);
     }
 
     @Override
