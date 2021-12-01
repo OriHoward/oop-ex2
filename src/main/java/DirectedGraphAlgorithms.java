@@ -56,6 +56,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     @Override
     public boolean load(String file) {
         DirectedGraph g = new DirectedGraph();
-        return g.loadGraph(file);
+        boolean isLoaded = g.loadGraph(file);
+        if (isLoaded) {
+            currGraph = g;
+        }
+        return isLoaded;
     }
 }
