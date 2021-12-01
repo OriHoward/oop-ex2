@@ -10,7 +10,7 @@ public class GraphNode implements NodeData {
     private double weight;
     private HashMap<Integer, EdgeData> destMap;
     private HashMap<Integer, EdgeData> sourceMap;
-    private NodeTag tag;
+    private NodeTagEnum tag;
 
     public GraphNode(GeoLocation location, int id) {
         this.location = new NodeLocation(location.x(), location.y(), location.z());
@@ -18,7 +18,7 @@ public class GraphNode implements NodeData {
         this.weight = 0;
         this.destMap = new HashMap<>();
         this.sourceMap = new HashMap<>();
-        tag = NodeTag.WHITE;
+        tag = NodeTagEnum.WHITE;
 
     }
 
@@ -91,6 +91,6 @@ public class GraphNode implements NodeData {
 
     @Override
     public void setTag(int t) {
-
+        this.tag = NodeTagEnum.values()[t];
     }
 }
