@@ -81,6 +81,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
         return currNode.getDestMap().values().iterator();
     }
 
+
     @Override
     public NodeData removeNode(int key) {
         GraphNode currNode = (GraphNode) this.nodeMap.get(key);

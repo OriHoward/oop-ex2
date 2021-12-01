@@ -1,5 +1,6 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
 import api.NodeData;
 
 import java.util.Iterator;
@@ -29,9 +30,37 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         return null;
     }
 
+    boolean visitAll(GraphNode currNode, Iterator<EdgeData> edgeDataIterator, int counter) {
+        int numOfNodes = currGraph.nodeMap.size();
+        currNode.setTag(NodeTagEnum.GRAY.getValue());
+        EdgeData currEdge;
+        GraphNode nextNode;
+        while (edgeDataIterator.hasNext()) {
+            currEdge = edgeDataIterator.next();
+            nextNode = (GraphNode) currGraph.nodeMap.get(currEdge.getDest());
+            if (nextNode.getTag() == NodeTagEnum.WHITE.getValue()) {
+                visitAll(nextNode, edgeDataIterator, counter);
+                nextNode.setTag(NodeTagEnum.BLACK.getValue());
+                counter++;
+            }
+        }
+        return counter == numOfNodes;
+    }
+
     @Override
     public boolean isConnected() {
-        return false;
+        int numOfNodes = currGraph.nodeMap.size();
+        int counter = 0;
+        for (int i = 0; i < numOfNodes; i++) {
+            Iterator<EdgeData> edgeDataIterator = currGraph.edgeIter(i);
+            GraphNode currNode = (GraphNode) currGraph.nodeMap.get(i);
+            if (!visitAll(currNode, edgeDataIterator, counter)) {
+                return false;
+            }
+            init(currGraph);
+            counter = 0;
+        }
+        return true;
     }
 
     @Override
@@ -46,6 +75,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public NodeData center() {
+        if (!isConnected()) {
+            return null;
+        }
+
         return null;
     }
 
