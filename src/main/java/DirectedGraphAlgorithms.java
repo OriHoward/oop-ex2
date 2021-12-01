@@ -2,6 +2,7 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
@@ -11,6 +12,11 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public void init(DirectedWeightedGraph g) {
+        Iterator<NodeData> nodeIter = this.currGraph.nodeIter();
+        while (nodeIter.hasNext()) {
+            NodeData currNode = nodeIter.next();
+            currNode.setTag(NodeTagEnum.WHITE.getValue());
+        }
     }
 
     @Override
