@@ -49,7 +49,8 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        dijkstra(src);
+        return dist[dest];
     }
 
     @Override
