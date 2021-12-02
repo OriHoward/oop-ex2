@@ -8,10 +8,14 @@ import java.util.*;
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
     DirectedGraph currGraph;
-
+    Double[] dist;
+    List[] prev;
 
     @Override
     public void init(DirectedWeightedGraph g) {
+        dist = new Double[this.currGraph.nodeSize()];
+        prev = new ArrayList[this.currGraph.nodeSize()];
+
         Iterator<NodeData> nodeIter = this.currGraph.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currNode = nodeIter.next();
@@ -69,18 +73,21 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        Double[] dist = new Double[this.currGraph.nodeSize()];
+        dijkstra(src);
+        return prev[dest];
+    }
+
+    public void dijkstra(int src) {
+
         dist[src] = 0.0;
         Comparator<NodeData> byWeight = Comparator.comparing((NodeData n) -> dist[n.getKey()]);
-
         Queue<NodeData> toScan = new PriorityQueue<>(byWeight.reversed());
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
 
-        ArrayList<NodeData>[] prev = new ArrayList[this.currGraph.nodeSize()];
         while (nodesIter.hasNext()) {
             NodeData currNode = nodesIter.next();
             if (currNode.getKey() != src) {
-                dist[currNode.getKey()] = Double.valueOf(Integer.MAX_VALUE);
+                dist[currNode.getKey()] = (double) Integer.MAX_VALUE;
                 prev[currNode.getKey()] = new ArrayList<>();
             }
             toScan.add(currNode);
@@ -101,10 +108,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                 }
             }
         }
-
-        //at this point in the code I know what is the distance between the source node and every other node in the graph
-        //I need to sort the nodes by the distance so that I can start iterating over them
-        return null;
     }
 
     @Override
@@ -133,6 +136,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         if (isLoaded) {
             currGraph = g;
         }
+        init(g);
         return isLoaded;
     }
 }

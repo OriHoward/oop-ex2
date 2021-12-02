@@ -5,7 +5,6 @@ public class Main {
 
         DirectedWeightedGraphAlgorithms algos = new DirectedGraphAlgorithms();
         algos.load("data/G1.json");
-        System.out.println("asdfl;kjas;dflkjasdf");
-
+        algos.shortestPath(0,6);
     }
 }
