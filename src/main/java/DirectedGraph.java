@@ -78,18 +78,19 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return this.nodeMap.values().iterator();
+        return new DecoratedNodeIterator(this.nodeMap.values().iterator(), this);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return new EdgeIterator(this);
+        return new DecoratedEdgeIterator(this.parsedEdges.iterator(), this);
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         GraphNode currNode = (GraphNode) this.nodeMap.get(node_id);
-        return currNode.getDestMap().values().iterator();
+        return new DecoratedEdgeIterator(currNode.getDestMap().values().iterator(), this);
+
     }
 
 

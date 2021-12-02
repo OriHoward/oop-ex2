@@ -1,33 +1,30 @@
 import api.EdgeData;
 
 import java.util.Iterator;
-import java.util.List;
 
-public class EdgeIterator implements Iterator<EdgeData> {
+public class DecoratedEdgeIterator implements Iterator<EdgeData> {
 
     DirectedGraph graph;
     int currIndex;
     int MCount;
-    List<EdgeData> edges;
+    Iterator<EdgeData> edgeIter;
 
-    public EdgeIterator(DirectedGraph graph) {
-
+    public DecoratedEdgeIterator(Iterator<EdgeData> edgeIter, DirectedGraph graph) {
         currIndex = 0;
         this.graph = graph;
         this.MCount = graph.getMC();
-        this.edges = graph.getParsedEdges();
+        this.edgeIter = edgeIter;
     }
 
     @Override
     public boolean hasNext() {
         this.graph.hasChanged(this.MCount);
-        return edges.size() > currIndex && edges.get(currIndex) != null;
+        return edgeIter.hasNext();
     }
 
     @Override
     public EdgeData next() {
         this.graph.hasChanged(this.MCount);
-        return edges.get(currIndex++);
+        return edgeIter.next();
     }
-
 }
