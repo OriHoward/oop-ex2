@@ -25,7 +25,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return currGraph;
     }
 
     @Override
