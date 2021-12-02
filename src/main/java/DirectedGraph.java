@@ -12,12 +12,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class DirectedGraph implements DirectedWeightedGraph {
     private int MCount;
     HashMap<Integer, NodeData> nodeMap;
-    ArrayList<EdgeData> parsedEdges;
+    List<EdgeData> parsedEdges;
 
     public DirectedGraph() {
         this.MCount = 0;
@@ -51,6 +52,10 @@ public class DirectedGraph implements DirectedWeightedGraph {
         }
     }
 
+    public List<EdgeData> getParsedEdges() {
+        return parsedEdges;
+    }
+
     @Override
     public void connect(int src, int dest, double w) {
         GraphNode srcNode = (GraphNode) nodeMap.get(src);
@@ -65,6 +70,12 @@ public class DirectedGraph implements DirectedWeightedGraph {
         MCount++;
     }
 
+    public void hasChanged(int givenMCount) {
+        if (givenMCount != this.MCount) {
+            throw new RuntimeException("Changes where performed during iteration");
+        }
+    }
+
     @Override
     public Iterator<NodeData> nodeIter() {
         return this.nodeMap.values().iterator();
@@ -72,7 +83,7 @@ public class DirectedGraph implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return parsedEdges.iterator();
+        return new EdgeIterator(this);
     }
 
     @Override
