@@ -33,35 +33,16 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         return null;
     }
 
-    boolean visitAll(GraphNode currNode, Iterator<EdgeData> edgeDataIterator, int counter) {
-        int numOfNodes = currGraph.nodeMap.size();
-        currNode.setTag(NodeTagEnum.GRAY.getValue());
-        EdgeData currEdge;
-        GraphNode nextNode;
-        while (edgeDataIterator.hasNext()) {
-            currEdge = edgeDataIterator.next();
-            nextNode = (GraphNode) currGraph.nodeMap.get(currEdge.getDest());
-            if (nextNode.getTag() == NodeTagEnum.WHITE.getValue()) {
-                visitAll(nextNode, edgeDataIterator, counter);
-                nextNode.setTag(NodeTagEnum.BLACK.getValue());
-                counter++;
-            }
-        }
-        return counter == numOfNodes;
-    }
-
     @Override
     public boolean isConnected() {
         int numOfNodes = currGraph.nodeMap.size();
-        int counter = 0;
-        for (int i = 0; i < numOfNodes; i++) {
-            Iterator<EdgeData> edgeDataIterator = currGraph.edgeIter(i);
-            GraphNode currNode = (GraphNode) currGraph.nodeMap.get(i);
-            if (!visitAll(currNode, edgeDataIterator, counter)) {
-                return false;
+        for (int nodeKey = 0; nodeKey < numOfNodes; nodeKey++) {
+            dijkstra(nodeKey);
+            for (int j = 0; j < dist.length; j++) {
+                if (dist[j] == Integer.MAX_VALUE) {
+                    return false;
+                }
             }
-            init(currGraph);
-            counter = 0;
         }
         return true;
     }
@@ -78,7 +59,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
     public void dijkstra(int src) {
-
         dist[src] = 0.0;
         Comparator<NodeData> byWeight = Comparator.comparing((NodeData n) -> dist[n.getKey()]);
         Queue<NodeData> toScan = new PriorityQueue<>(byWeight.reversed());
@@ -115,9 +95,39 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         if (!isConnected()) {
             return null;
         }
+        ArrayList<Double> centerNodePotential = new ArrayList<>();
+        for (int nodeKey = 0; nodeKey < this.currGraph.nodeMap.size(); nodeKey++) {
+            dijkstra(nodeKey);
+            centerNodePotential.add(findMax(dist));
+        }
+        return findCenterNode(centerNodePotential);
 
-        return null;
     }
+
+    private NodeData findCenterNode(ArrayList<Double> centerNodePotential) {
+        double currMin = centerNodePotential.get(0);
+        int chosenNodeKey = 0;
+        for (int i = 1; i < centerNodePotential.size(); i++) {
+            if (centerNodePotential.get(i) < currMin) {
+                currMin = centerNodePotential.get(i);
+                chosenNodeKey = i;
+            }
+        }
+        return this.currGraph.getNode(chosenNodeKey);
+    }
+
+    private double findMax(Double[] dist) {
+        double currMax = dist[0];
+        double max = currMax;
+        for (int i = 1; i < dist.length; i++) {
+            if (dist[i] > currMax) {
+                currMax = dist[i];
+                max = currMax;
+            }
+        }
+        return max;
+    }
+
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
