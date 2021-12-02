@@ -39,12 +39,18 @@ class DirectedGraphAlgorithmsTest {
         edges.add(2, new GraphEdge(2, 4, 1.2));
         edges.add(3, new GraphEdge(3, 1, 1.1));
         edges.add(4, new GraphEdge(1, 0, 1.6));
+        for (int i = 0; i < size; i++) {
+            graph.addNode(nodes.get(i));
+            graph.connect(edges.get(i).getSrc(), edges.get(i).getDest(), edges.get(i).getWeight());
+        }
+
 
     }
 
 
     @org.junit.jupiter.api.Test
     void isConnected() {
+
     }
 
     @org.junit.jupiter.api.Test
