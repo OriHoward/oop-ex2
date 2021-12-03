@@ -56,7 +56,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         dijkstra(src);
-        return prev[dest];
+        List<NodeData> fullPath = prev[dest];
+        fullPath.add(this.currGraph.nodeMap.get(dest));
+        return fullPath;
     }
 
     public void dijkstra(int src) {
