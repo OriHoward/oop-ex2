@@ -1,6 +1,7 @@
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DirectedGraphAlgorithmsTest {
 
-    static DirectedWeightedGraphAlgorithms algos;
+    static DirectedGraphAlgorithms algos;
+    static final double EPSILON = 0.0000000001;
 
     @BeforeAll
     static void init() {
@@ -31,8 +33,7 @@ class DirectedGraphAlgorithmsTest {
         assertEquals(1.0, algos.shortestPathDist(1, 5));
     }
 
-    // Todo - prev trail is wrong. need to fix the function.
-    //
+
     @org.junit.jupiter.api.Test
     void shortestPath() {
         algos.load("dataTests/shortestPathTest.json");
@@ -45,15 +46,20 @@ class DirectedGraphAlgorithmsTest {
         trail.add(node2);
         trail.add(node4);
         trail.add(node5);
-        assertEquals(trail, algos.shortestPath(1,5));
-        // ^ should be - 5,4,2,1
-        //fixed the path list - but we need to ignore the last one because the dest node doesn't count
-        // result is - 1,4 - there is not even an edge 1 to 4 lel
-
+        assertEquals(trail, algos.shortestPath(1, 5));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void dijkstra() {
+        algos.load("dataTests/dijkstraTest.json");
+        algos.dijkstra(1);
+        Double[] dist = algos.dist;
+        assertEquals(1.9, dist[0], EPSILON);
+        assertEquals(0.0, dist[1], EPSILON);
+        assertEquals(0.4, dist[2], EPSILON);
+        assertEquals(1.2, dist[3], EPSILON);
+        assertEquals(Integer.MAX_VALUE, dist[4], EPSILON);
+        assertEquals(2.4, dist[5], EPSILON);
     }
 
     @org.junit.jupiter.api.Test
