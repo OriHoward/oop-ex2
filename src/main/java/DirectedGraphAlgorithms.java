@@ -84,6 +84,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                 double alt = dist[currNode.getKey()] + currEdge.getWeight();
                 if (alt < dist[neighbor.getKey()]) {
                     dist[neighbor.getKey()] = alt;
+                    // add the list of the currNode
+                    if (prev[currNode.getKey()] != null) {
+                        prev[neighbor.getKey()] = new ArrayList(prev[currNode.getKey()]);
+                    }
                     prev[neighbor.getKey()].add(currNode);
                     toScan.add(neighbor);
                 }

@@ -1,10 +1,8 @@
-import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +47,7 @@ class DirectedGraphAlgorithmsTest {
         trail.add(node5);
 //        assertEquals(trail, algos.shortestPath(1,5));
         // ^ should be - 5,4,2,1
+        //fixed the path list - but we need to ignore the last one because the dest node doesn't count
         // result is - 1,4 - there is not even an edge 1 to 4 lel
 
     }
