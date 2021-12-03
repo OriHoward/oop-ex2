@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class GraphGUI extends Application {
+public class LoadGraphGUI extends Application {
 
     final int WIDTH = 800;
     final int HEIGHT = 600;
