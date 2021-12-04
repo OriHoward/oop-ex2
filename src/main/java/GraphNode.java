@@ -2,9 +2,10 @@ import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class GraphNode implements NodeData {
+public class GraphNode implements NodeData, Serializable {
     private GeoLocation location;
     private int id;
     private double weight;

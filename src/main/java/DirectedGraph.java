@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class DirectedGraph implements DirectedWeightedGraph {
+public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     private int MCount;
     HashMap<Integer, NodeData> nodeMap;
     List<EdgeData> parsedEdges;
@@ -24,6 +25,14 @@ public class DirectedGraph implements DirectedWeightedGraph {
         this.MCount = 0;
         this.nodeMap = new HashMap<>();
         parsedEdges = new ArrayList<>();
+    }
+
+    public void setNodeMap(HashMap<Integer, NodeData> nodeMap) {
+        this.nodeMap = nodeMap;
+    }
+
+    public void setParsedEdges(List<EdgeData> parsedEdges) {
+        this.parsedEdges = parsedEdges;
     }
 
     @Override
@@ -61,8 +70,12 @@ public class DirectedGraph implements DirectedWeightedGraph {
         GraphNode srcNode = (GraphNode) nodeMap.get(src);
         GraphNode destNode = (GraphNode) nodeMap.get(dest);
         GraphEdge edge = new GraphEdge(src, dest, w);
+        GraphEdge oldEdge = (GraphEdge) srcNode.getDestMap().get(dest);
         //we need to check if that is a new node, or it overrides an existing one
-        if (srcNode.getDestMap().get(dest) == null) {
+        if (oldEdge == null) {
+            parsedEdges.add(edge);
+        }else{
+            parsedEdges.remove(oldEdge);
             parsedEdges.add(edge);
         }
         srcNode.addDest(edge);

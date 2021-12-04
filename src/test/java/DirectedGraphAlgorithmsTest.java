@@ -1,4 +1,4 @@
-import api.DirectedWeightedGraphAlgorithms;
+import api.DirectedWeightedGraph;
 import api.NodeData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class DirectedGraphAlgorithmsTest {
     }
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     void isConnected() {
         algos.load("dataTests/notConnected.json");
         assertFalse(algos.isConnected());
@@ -27,14 +27,14 @@ class DirectedGraphAlgorithmsTest {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void shortestPathDist() {
         algos.load("dataTests/shortestPathTest.json");
         assertEquals(1.0, algos.shortestPathDist(1, 5));
     }
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     void shortestPath() {
         algos.load("dataTests/shortestPathTest.json");
         ArrayList<NodeData> trail = new ArrayList<>();
@@ -62,14 +62,21 @@ class DirectedGraphAlgorithmsTest {
         assertEquals(2.4, dist[5], EPSILON);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void center() {
         algos.load("dataTests/centerTest.json");
         NodeData expectedNode = algos.getGraph().getNode(2);
         assertEquals(expectedNode, algos.center());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void tsp() {
+    }
+
+    @Test
+    void copy(){
+        algos.load("dataTests/isConnected.json");
+        DirectedWeightedGraph copyGraph = algos.copy();
+        copyGraph.connect(0,1,1.7);
     }
 }

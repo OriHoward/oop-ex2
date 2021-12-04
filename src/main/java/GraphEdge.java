@@ -1,6 +1,8 @@
 import api.EdgeData;
 
-public class GraphEdge implements EdgeData {
+import java.io.Serializable;
+
+public class GraphEdge implements EdgeData, Serializable {
     private int source;
     private int dest;
     private double weight;

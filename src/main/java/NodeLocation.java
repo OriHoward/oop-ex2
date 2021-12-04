@@ -1,6 +1,8 @@
 import api.GeoLocation;
 
-public class NodeLocation implements GeoLocation {
+import java.io.Serializable;
+
+public class NodeLocation implements GeoLocation, Serializable {
     private double x;
     private double y;
     private double z;

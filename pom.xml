@@ -65,6 +65,12 @@
             <version>17</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
+
     </dependencies>
     <groupId>org.example</groupId>
     <artifactId>OOP2</artifactId>

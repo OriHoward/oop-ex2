@@ -2,6 +2,7 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
+import org.apache.commons.lang.SerializationUtils;
 
 import java.util.*;
 
@@ -30,7 +31,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+
+        DirectedGraph graphCopy = (DirectedGraph) SerializationUtils.clone(this.currGraph);
+
+        return graphCopy;
     }
 
     @Override
