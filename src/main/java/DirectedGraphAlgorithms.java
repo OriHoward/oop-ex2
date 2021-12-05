@@ -101,30 +101,61 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
     }
 
+    public void dijkstra(int src, int maxValue) {
+        dist[src] = 0.0;
+        Comparator<NodeData> byWeight = Comparator.comparing((NodeData n) -> dist[n.getKey()]);
+        Queue<NodeData> toScan = new PriorityQueue<>(byWeight.reversed());
+        Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
+
+        while (nodesIter.hasNext()) {
+            NodeData currNode = nodesIter.next();
+            if (currNode.getKey() != src) {
+                dist[currNode.getKey()] = (double) Integer.MAX_VALUE;
+                prev[currNode.getKey()] = new ArrayList<>();
+            }
+            toScan.add(currNode);
+        }
+
+        while (!toScan.isEmpty()) {
+            NodeData currNode = toScan.remove();
+            Iterator<EdgeData> edgeIter = this.currGraph.edgeIter(currNode.getKey());
+            EdgeData currEdge;
+            while (edgeIter.hasNext()) {
+                currEdge = edgeIter.next();
+                NodeData neighbor = this.currGraph.getNode(currEdge.getDest());
+                double alt = dist[currNode.getKey()] + currEdge.getWeight();
+                if (alt > maxValue) {
+                    return;
+                }
+                if (alt < dist[neighbor.getKey()]) {
+                    dist[neighbor.getKey()] = alt;
+                    // add the list of the currNode
+                    if (prev[currNode.getKey()] != null) {
+                        prev[neighbor.getKey()] = new ArrayList(prev[currNode.getKey()]);
+                    }
+                    prev[neighbor.getKey()].add(currNode);
+                    toScan.add(neighbor);
+                }
+            }
+        }
+    }
+
     @Override
     public NodeData center() {
         if (!isConnected()) {
             return null;
         }
-        ArrayList<Double> centerNodePotential = new ArrayList<>();
-        for (int nodeKey = 0; nodeKey < this.currGraph.nodeMap.size(); nodeKey++) {
-            dijkstra(nodeKey);
-            centerNodePotential.add(findMax(dist));
-        }
-        return findCenterNode(centerNodePotential);
-
-    }
-
-    private NodeData findCenterNode(ArrayList<Double> centerNodePotential) {
-        double currMin = centerNodePotential.get(0);
-        int chosenNodeKey = 0;
-        for (int i = 1; i < centerNodePotential.size(); i++) {
-            if (centerNodePotential.get(i) < currMin) {
-                currMin = centerNodePotential.get(i);
-                chosenNodeKey = i;
+        int chosenNode = 0;
+        double currMin = Double.MAX_VALUE;
+        for (int i = 0; i < this.currGraph.nodeMap.size(); i++) {
+            dijkstra(i);
+            double maxValue = findMax(dist);
+            if (maxValue < currMin) {
+                currMin = maxValue;
+                chosenNode = i;
             }
         }
-        return this.currGraph.getNode(chosenNodeKey);
+        return this.currGraph.nodeMap.get(chosenNode);
     }
 
     private double findMax(Double[] dist) {
