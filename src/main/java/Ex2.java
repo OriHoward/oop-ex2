@@ -38,6 +38,11 @@ public class Ex2 {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         // ****** Add your code here ******
         //
+           new GraphGUI();
         // ********************************
+    }
+
+    public static void main(String[] args) {
+        runGUI("data/G1.json");
     }
 }
