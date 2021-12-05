@@ -3,7 +3,7 @@ import api.NodeData;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
 
-public class Scale {
+public class GraphScale {
     DirectedGraph graph;
     Point2D minPoint;
     Point2D maxPoint;
@@ -11,13 +11,12 @@ public class Scale {
     int height;
 
 
-    public Scale(DirectedGraph graph, int width, int height) {
+    public GraphScale(DirectedGraph graph, int width, int height) {
         this.graph = graph;
         this.width = width;
         this.height = height;
         this.minPoint = new Point2D.Double();
         this.maxPoint = new Point2D.Double();
-
     }
 
 

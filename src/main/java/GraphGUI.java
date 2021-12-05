@@ -1,70 +1,64 @@
-import api.DirectedWeightedGraph;
-import api.EdgeData;
+import api.NodeData;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 
 public class GraphGUI extends Application {
     final int WIDTH = 800;
     final int HEIGHT = 600;
-    DirectedWeightedGraph g;
+    DirectedGraph g;
 
     public GraphGUI() {
         g = new DirectedGraph();
     }
 
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-
-
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Graph");
-        Line line = new Line();
-        line.setStartX(200);
-        line.setStartY(200);
-        line.setEndX(500);
-        line.setEndY(200);
-        line.setStrokeWidth(5);
-//        Iterator<EdgeData> edgeDataIterator = g.edgeIter();
-//        while (edgeDataIterator.hasNext()){
-//            EdgeData currEdge = edgeDataIterator.next();
-//            line.setStartX(currEdge.getSrc());
-//            line.setStartY(currEdge.getSrc());
-//        }
+        Group root = new Group();
+//        MenuBar menuBar = new MenuBar();
+//        VBox layout = new VBox(menuBar);
+//        Menu runMenu = new Menu("Run");
+//        Menu editMenu = new Menu("Edit");
+//        menuBar.getMenus().add(runMenu);
+//        menuBar.getMenus().add(editMenu);
 
-        MenuBar menuBar = new MenuBar();
-        VBox layout = new VBox(menuBar);
-        Menu runMenu = new Menu("Run");
-        Menu editMenu = new Menu("Edit");
+        GraphScale scale = new GraphScale(g,WIDTH,HEIGHT);
+        Iterator<NodeData> nodeIter = g.nodeIter();
+//        NodeData currNode = nodeIter.next();
+//        Point2D currPoint = new Point2D.Double(currNode.getLocation().x(),currNode.getLocation().y());
+//        currPoint = scale.convert(currPoint);
+//        Circle circle = new Circle(currPoint.getX(),currPoint.getY(),5);
+//        root.getChildren().add(circle);
 
-        menuBar.getMenus().add(runMenu);
+        new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                while (nodeIter.hasNext()) {
+                    NodeData currNode = nodeIter.next();
+                    Point2D currPoint = new Point2D.Double(currNode.getLocation().x(),currNode.getLocation().y());
+                    currPoint = scale.convert(currPoint);
+                    Circle circle = new Circle(currPoint.getX(),currPoint.getY(),5);
+                    root.getChildren().add(circle);
+                    System.out.println("hello");
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // Do nothing
+                }
+            }
+        }.start();
 
-        menuBar.getMenus().add(editMenu);
-        layout.getChildren().addAll(line);
-        Scene scene = new Scene(layout, WIDTH, HEIGHT);
+
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
 

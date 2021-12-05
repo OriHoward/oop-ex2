@@ -1,6 +1,8 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
+import static javafx.application.Application.launch;
+
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
  */
@@ -43,6 +45,7 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
+        launch(args);
         runGUI("data/G1.json");
     }
 }
