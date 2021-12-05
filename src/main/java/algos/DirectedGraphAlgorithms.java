@@ -26,10 +26,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
     }
 
-    public Double[] getDist() {
-        return dist;
-    }
-
     @Override
     public DirectedWeightedGraph getGraph() {
         return currGraph;
@@ -54,27 +50,12 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                 if (dist[currMaxIdx] == Integer.MAX_VALUE) {
                     return false;
                 }
-                prev[currMaxIdx].forEach((node) -> {
-                    addSource(node, foundConnected);
-                });
+                prev[currMaxIdx].forEach((node) -> foundConnected.add(node.getKey()));
             }
         }
         return true;
     }
 
-    public void addSource(NodeData node, HashSet<Integer> discovered) {
-        GraphNode currNode = (GraphNode) node;
-        if (discovered.contains(currNode.getKey())) {
-            return;
-        }
-        currNode.getSourceMap().values().forEach(edgeData -> {
-            if (!discovered.contains(edgeData.getSrc())) {
-                discovered.add(edgeData.getSrc());
-                addSource(this.currGraph.getNode(edgeData.getSrc()), discovered);
-            }
-        });
-        discovered.add(currNode.getKey());
-    }
 
     @Override
     public double shortestPathDist(int src, int dest) {
