@@ -1,3 +1,5 @@
+package algos;
+
 public enum NodeTagEnum {
     WHITE(0),
     GRAY(1),

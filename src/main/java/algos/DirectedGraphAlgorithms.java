@@ -1,3 +1,5 @@
+package algos;
+
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
@@ -10,7 +12,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     DirectedGraph currGraph;
     Double[] dist;
-    List[] prev;
+    List<NodeData>[] prev;
 
     @Override
     public void init(DirectedWeightedGraph g) {
@@ -22,6 +24,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
             NodeData currNode = nodeIter.next();
             currNode.setTag(NodeTagEnum.WHITE.getValue());
         }
+    }
+
+    public Double[] getDist() {
+        return dist;
     }
 
     @Override
@@ -40,15 +46,34 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     @Override
     public boolean isConnected() {
         int numOfNodes = currGraph.nodeMap.size();
+        HashSet<Integer> foundConnected = new HashSet<>();
         for (int nodeKey = 0; nodeKey < numOfNodes; nodeKey++) {
-            dijkstra(nodeKey);
-            for (int j = 0; j < dist.length; j++) {
-                if (dist[j] == Integer.MAX_VALUE) {
+            if (!foundConnected.contains(nodeKey)) {
+                dijkstra(nodeKey);
+                int currMaxIdx = findMax();
+                if (dist[currMaxIdx] == Integer.MAX_VALUE) {
                     return false;
                 }
+                prev[currMaxIdx].forEach((node) -> {
+                    addSource(node, foundConnected);
+                });
             }
         }
         return true;
+    }
+
+    public void addSource(NodeData node, HashSet<Integer> discovered) {
+        GraphNode currNode = (GraphNode) node;
+        if (discovered.contains(currNode.getKey())) {
+            return;
+        }
+        currNode.getSourceMap().values().forEach(edgeData -> {
+            if (!discovered.contains(edgeData.getSrc())) {
+                discovered.add(edgeData.getSrc());
+                addSource(this.currGraph.getNode(edgeData.getSrc()), discovered);
+            }
+        });
+        discovered.add(currNode.getKey());
     }
 
     @Override
@@ -103,24 +128,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
 
     @Override
-//    public NodeData center() {
-//        if (!isConnected()) {
-//            return null;
-//        }
-//        int chosenNode = 0;
-//        double currMin = Double.MAX_VALUE;
-//        for (int i = 0; i < this.currGraph.nodeMap.size(); i++) {
-//            dijkstra(i);
-//            double maxValue = findMax(dist);
-//            if (maxValue < currMin) {
-//                currMin = maxValue;
-//                chosenNode = i;
-//            }
-//        }
-//        return this.currGraph.nodeMap.get(chosenNode);
-//    }
-
-
     public NodeData center() {
 //        if (!isConnected()) {
 //            return null;
@@ -141,12 +148,23 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                     currMinMax = dist[minmaxIdx];
                     chosenNode = currNode.getKey();
                 }
-                passed.addAll(prev[minmaxIdx]);
+                addMinimalSources(minmaxIdx, passed);
                 System.out.println(passed.size());
             }
         }
 
         return this.currGraph.getNode(chosenNode);
+    }
+
+    private void addMinimalSources(int minmaxIdx, HashSet<Integer> passed) {
+        for (NodeData scannedNode : prev[minmaxIdx]) {
+            GraphNode currNode = (GraphNode) scannedNode;
+            Iterator<EdgeData> nodeNeighbors = currNode.getDestMap().values().iterator();
+            passed.add(scannedNode.getKey());
+            while (nodeNeighbors.hasNext()) {
+                passed.add(nodeNeighbors.next().getSrc());
+            }
+        }
     }
 
     private int findMax() {

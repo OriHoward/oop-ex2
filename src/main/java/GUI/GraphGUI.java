@@ -1,10 +1,13 @@
+package GUI;
+
+import algos.DirectedGraph;
 import api.NodeData;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
@@ -32,7 +35,6 @@ public class GraphGUI extends Application {
 
         GraphScale scale = new GraphScale(g,WIDTH,HEIGHT);
         Iterator<NodeData> nodeIter = g.nodeIter();
-        NodeData currNode = nodeIter.next();
 //        Point2D currPoint = new Point2D.Double(currNode.getLocation().x(),currNode.getLocation().y());
 //        currPoint = scale.convert(currPoint);
 //        Circle circle = new Circle(currPoint.getX(),currPoint.getY(),5);

@@ -1,3 +1,4 @@
+import GUI.GraphGUI;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 

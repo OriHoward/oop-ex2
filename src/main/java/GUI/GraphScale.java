@@ -1,3 +1,6 @@
+package GUI;
+
+import algos.DirectedGraph;
 import api.NodeData;
 
 import java.awt.geom.Point2D;

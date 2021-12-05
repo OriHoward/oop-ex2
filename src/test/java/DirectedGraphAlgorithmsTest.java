@@ -1,3 +1,4 @@
+import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraph;
 import api.NodeData;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,7 +54,7 @@ class DirectedGraphAlgorithmsTest {
     void dijkstra() {
         algos.load("dataTests/dijkstraTest.json");
         algos.dijkstra(1);
-        Double[] dist = algos.dist;
+        Double[] dist = algos.getDist();
         assertEquals(1.9, dist[0], EPSILON);
         assertEquals(0.0, dist[1], EPSILON);
         assertEquals(0.4, dist[2], EPSILON);

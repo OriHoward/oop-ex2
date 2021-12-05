@@ -1,3 +1,5 @@
+package algos;
+
 import api.GeoLocation;
 
 import java.io.Serializable;

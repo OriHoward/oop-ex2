@@ -1,3 +1,5 @@
+package algos;
+
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;

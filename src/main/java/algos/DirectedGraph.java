@@ -1,3 +1,5 @@
+package algos;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
