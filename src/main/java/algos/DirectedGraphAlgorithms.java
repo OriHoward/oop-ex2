@@ -164,6 +164,34 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
     }
 
+    public void dijkstraMinimize(int src) {
+        dist[src] = 0.0;
+        Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
+        Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
+
+        while (nodesIter.hasNext()) {
+            NodeData currNode = nodesIter.next();
+            if (currNode.getKey() != src) {
+                dist[currNode.getKey()] = (double) Integer.MAX_VALUE;
+            }
+            toScan.add(currNode);
+        }
+
+        while (!toScan.isEmpty()) {
+            NodeData currNode = toScan.remove();
+            Iterator<EdgeData> edgeIter = this.currGraph.edgeIter(currNode.getKey());
+            EdgeData currEdge;
+            while (edgeIter.hasNext()) {
+                currEdge = edgeIter.next();
+                NodeData neighbor = this.currGraph.getNode(currEdge.getDest());
+                double alt = dist[currNode.getKey()] + currEdge.getWeight();
+                if (alt < dist[neighbor.getKey()]) {
+                    dist[neighbor.getKey()] = alt;
+                    toScan.add(neighbor);
+                }
+            }
+        }
+    }
 
     @Override
     public NodeData center() {
@@ -177,7 +205,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         int chosenNode = 0;
         while (nodeIter.hasNext()) {
             currNode = nodeIter.next();
-            dijkstra(currNode.getKey());
+            dijkstraMinimize(currNode.getKey());
             int minmaxIdx = findMax();
             if (dist[minmaxIdx] < currMinMax) {
                 currMinMax = dist[minmaxIdx];
@@ -219,7 +247,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                     }
                 }
                 counter = 0;
-
             }
         }
         return null;
