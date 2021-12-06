@@ -9,6 +9,14 @@ public class GraphEdge implements EdgeData, Serializable {
     private int dest;
     private double weight;
 
+    public void setSource(int source) {
+        this.source = source;
+    }
+
+    public void setDest(int dest) {
+        this.dest = dest;
+    }
+
     public GraphEdge(int source, int dest, double weight) {
         this.source = source;
         this.dest = dest;

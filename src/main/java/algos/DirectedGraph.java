@@ -187,17 +187,21 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
                 this.nodeMap.put(currNode.getKey(), currNode);
             }
             reader.close();
-            for (EdgeData edge : parsedEdges) {
-                GraphNode srcNode = (GraphNode) this.nodeMap.get(edge.getSrc());
-                GraphNode dstNode = (GraphNode) this.nodeMap.get(edge.getDest());
-                srcNode.addDest(edge);
-                dstNode.addSrc(edge);
-            }
+            initiateEdgeMaps();
             return true;
 
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void initiateEdgeMaps() {
+        for (EdgeData edge : parsedEdges) {
+            GraphNode srcNode = (GraphNode) this.nodeMap.get(edge.getSrc());
+            GraphNode dstNode = (GraphNode) this.nodeMap.get(edge.getDest());
+            srcNode.addDest(edge);
+            dstNode.addSrc(edge);
         }
     }
 }

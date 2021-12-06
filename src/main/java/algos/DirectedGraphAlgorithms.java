@@ -14,6 +14,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     Double[] dist;
     List<NodeData>[] prev;
 
+    public Double[] getDist() {
+        return dist;
+    }
+
     @Override
     public void init(DirectedWeightedGraph g) {
         dist = new Double[this.currGraph.nodeSize()];
@@ -41,19 +45,60 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public boolean isConnected() {
-        int numOfNodes = currGraph.nodeMap.size();
-        HashSet<Integer> foundConnected = new HashSet<>();
-        for (int nodeKey = 0; nodeKey < numOfNodes; nodeKey++) {
-            if (!foundConnected.contains(nodeKey)) {
-                dijkstra(nodeKey);
-                int currMaxIdx = findMax();
-                if (dist[currMaxIdx] == Integer.MAX_VALUE) {
-                    return false;
-                }
-                prev[currMaxIdx].forEach((node) -> foundConnected.add(node.getKey()));
-            }
+        return dfs();
+    }
+
+    public boolean dfs() {
+        DirectedGraph graphCopy = (DirectedGraph) this.copy();
+        if (graphCopy == null) {
+            return false;
         }
+        HashSet<Integer> scannedNodes = new HashSet<>();
+        NodeData firstNode = graphCopy.nodeMap.get(0);
+        dfsTraversal(graphCopy, firstNode, scannedNodes);
+
+        if (scannedNodes.size() != graphCopy.nodeMap.size()) {
+            return false;
+        }
+
+        //reverse
+        scannedNodes.clear();
+        Iterator<NodeData> nodeDataIterator = graphCopy.nodeIter();
+        while (nodeDataIterator.hasNext()) {
+            nodeDataIterator.next().setTag(NodeTagEnum.WHITE.getValue());
+        }
+
+        //dfs traversal on the reversed graph
+        graphCopy.initiateEdgeMaps();
+        dfsTraversal(graphCopy, firstNode, scannedNodes);
+
+        if (scannedNodes.size() != graphCopy.nodeMap.size()) {
+            return false;
+        }
+
         return true;
+
+    }
+
+    private void dfsTraversal(DirectedGraph graph, NodeData currNode, HashSet<Integer> scannedNodes) {
+        currNode.setTag(NodeTagEnum.GRAY.getValue());
+        scannedNodes.add(currNode.getKey());
+        Iterator<EdgeData> edgeIter = graph.edgeIter(currNode.getKey());
+        while (edgeIter.hasNext()) {
+            GraphEdge currNeighEdge = (GraphEdge) edgeIter.next();
+            NodeData neighNode = graph.getNode(currNeighEdge.getDest());
+            if (neighNode.getTag() == NodeTagEnum.WHITE.getValue()) {
+                dfsTraversal(graph, neighNode, scannedNodes);
+            }
+            int temp = currNeighEdge.getDest();
+            currNeighEdge.setDest(currNeighEdge.getSrc());
+            currNeighEdge.setSource(temp);
+        }
+        currNode.setTag(NodeTagEnum.BLACK.getValue());
+        GraphNode asGraphNode = (GraphNode) currNode;
+        asGraphNode.setDestMap(new HashMap<>());
+        asGraphNode.setSourceMap(new HashMap<>());
+
     }
 
 

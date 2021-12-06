@@ -38,6 +38,14 @@ public class GraphNode implements NodeData, Serializable {
         this.destMap.put(edge.getDest(), edge);
     }
 
+    public void setSourceMap(HashMap<Integer, EdgeData> sourceMap) {
+        this.sourceMap = sourceMap;
+    }
+
+    public void setDestMap(HashMap<Integer, EdgeData> destMap) {
+        this.destMap = destMap;
+    }
+
     public void addSrc(EdgeData edge) {
         this.sourceMap.put(edge.getSrc(), edge);
 
