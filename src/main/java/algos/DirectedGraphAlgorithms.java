@@ -29,10 +29,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public void init(DirectedWeightedGraph g) {
-        dist = new Double[this.currGraph.nodeSize()];
-        prev = new ArrayList[this.currGraph.nodeSize()];
+        dist = new Double[g.nodeSize()];
+        prev = new ArrayList[g.nodeSize()];
 
-        Iterator<NodeData> nodeIter = this.currGraph.nodeIter();
+        Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currNode = nodeIter.next();
             currNode.setTag(NodeTagEnum.WHITE.getValue());
@@ -71,10 +71,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
 
         scannedNodes.clear();
-        Iterator<NodeData> nodeDataIterator = graphCopy.nodeIter();
-        while (nodeDataIterator.hasNext()) {
-            nodeDataIterator.next().setTag(NodeTagEnum.WHITE.getValue());
-        }
+        init(graphCopy);
 
         //dfs traversal on the reversed graph
         graphCopy.initiateEdgeMaps();
