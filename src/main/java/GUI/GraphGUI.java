@@ -11,32 +11,19 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-
-import javafx.scene.text.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import static javafx.scene.paint.Color.GREEN;
 
 public class GraphGUI extends Application {
     final int WIDTH = 1080;
@@ -59,25 +46,22 @@ public class GraphGUI extends Application {
         primaryStage.setTitle("Graph");
         root = new Pane();
         Button exitBtn = new Button("exit");
-        exitBtn.setLayoutX(0);
-        exitBtn.setLayoutY(0);
         exitBtn.setOnAction(e -> Platform.exit());
         root.getChildren().add(exitBtn);
+        Text text = new Text(10,10,"click on each node to find more info");
+        text.setFont(new Font(40));
+        text.setFill(GREEN);
+        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 30));
+        text.setY(50);
+        text.setX(50);
+        text.setVisible(true);
+        Group group = new Group(root,text);
 
-
-//        Group root = new Group();
-//        MenuBar menuBar = new MenuBar();
-//        VBox layout = new VBox(menuBar);
-//        Menu runMenu = new Menu("Run");
-//        Menu editMenu = new Menu("Edit");
-//        menuBar.getMenus().add(runMenu);
-//        menuBar.getMenus().add(editMenu);
 
         AnimationTimer tm = new MyTimer();
         tm.start();
 
-
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = new Scene(group, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -97,10 +81,10 @@ public class GraphGUI extends Application {
                 EdgeData currEdge = edgeIter.next();
                 int srcNode = algos.getGraph().getNode(currEdge.getSrc()).getKey();
                 int destNode = algos.getGraph().getNode(currEdge.getDest()).getKey();
-                double startX = nodeList.get(srcNode).getLayoutX();
-                double startY = nodeList.get(srcNode).getLayoutY();
-                double endX = nodeList.get(destNode).getLayoutX();
-                double endY = nodeList.get(destNode).getLayoutY();
+                double startX = nodeList.get(srcNode).getLayoutX()  + radius/2;
+                double startY = nodeList.get(srcNode).getLayoutY()+radius/2;
+                double endX = nodeList.get(destNode).getLayoutX()+radius/2;
+                double endY = nodeList.get(destNode).getLayoutY()+radius/2;
                 Line line = new Line();
                 line.setStyle("-fx-stroke: blue;");
                 line.setStartX(startX);
@@ -113,12 +97,7 @@ public class GraphGUI extends Application {
         }
 
         private void drawArrow(double strPx, double strPy, double endPx,double endPy) {
-//            double strPx = startPoint.getCenterX();
-//            double strPy = startPoint.getCenterY();
-//            double endPx = endPoint.getCenterX();
-//            double endPy = endPoint.getCenterY();
             double dist = calculateDist(strPx,strPy,endPx,endPy);
-//            int angelNumber = checkAngle(startPoint, endPoint);
             double leftX = endPx + ((15 / dist) * (((strPx - endPx) * Math.cos(50)) + ((strPy - endPy) * (Math.sin(50)))));
             double leftY = endPy + ((15 / dist) * (((strPy - endPy) * Math.cos(50)) - ((strPx - endPx) * (Math.sin(50)))));
             double rightX = endPx + ((15 / dist) * (((strPx - endPx) * Math.cos(50)) - ((strPy - endPy) * (Math.sin(50)))));
@@ -138,71 +117,6 @@ public class GraphGUI extends Application {
             root.getChildren().addAll(leftLine, rightLine);
         }
 
-//        private void changePointsByRatio(Circle startPoint, Circle endPoint, double endPx, double endPy) {
-        //            if (angelNumber == 1) {
-//                endPx = endPx - radius;
-//                endPy = endPy + radius;
-//            }
-//            if (angelNumber == 2) {
-//                endPx = endPx + radius;
-//                endPy = endPy + radius;
-//            }
-//            if (angelNumber == 3) {
-//                endPx = endPx + radius;
-//                endPy = endPy - radius;
-//            }
-//            if (angelNumber == 4) {
-//                endPx = endPx - radius;
-//                endPy = endPy - radius;
-//            }
-//            if (angelNumber == 5) {
-//                endPy = endPy - radius;
-//            }
-//            if (angelNumber == 6) {
-//                endPy = endPy + radius;
-//            }
-//            if (angelNumber == 7) {
-//                endPx = endPx - radius;
-//            }
-//            if (angelNumber == 8){
-//                endPx = endPx + radius;
-//            }
-//    }
-//
-
-
-        private int checkAngle(Circle startPoint, Circle endPoint) {
-            if (endPoint.getCenterX() > startPoint.getCenterX() && endPoint.getCenterY() < startPoint.getCenterY()) {
-                return 1;
-            }
-            if (endPoint.getCenterY() < startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
-                return 2;
-            }
-            if (endPoint.getCenterY() > startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
-                return 3;
-            }
-            if (endPoint.getCenterX() > startPoint.getCenterX() && endPoint.getCenterY() > startPoint.getCenterY()) {
-                return 4;
-            }
-            // 5 - if end point is arrow up
-            if (endPoint.getCenterX() == startPoint.getCenterX() && endPoint.getCenterY() < startPoint.getCenterY()) {
-                return 5;
-            }
-            // 6 - if end point is arrow down
-            if (endPoint.getCenterX() == startPoint.getCenterX() && endPoint.getCenterY() > startPoint.getCenterY()) {
-                return 6;
-            }
-            // 7 - if end point is arrow right
-            if (endPoint.getCenterX() > startPoint.getCenterX() && endPoint.getCenterY() == startPoint.getCenterY()) {
-                return 7;
-            }
-            // 8 - if end point is arrow left
-            if (endPoint.getCenterX() < startPoint.getCenterX() && endPoint.getCenterY() == startPoint.getCenterY()) {
-                return 8;
-            }
-            return 0;
-        }
-
         private double calculateDist(double strPx, double strPy, double endPx,double endPy) {
             double distX = Math.pow(Math.abs(strPx - endPx), 2);
             double distY = Math.pow(Math.abs(strPy - endPy), 2);
@@ -216,13 +130,6 @@ public class GraphGUI extends Application {
                 NodeData currNode = nodeIter.next();
                 Point2D currPoint = new Point2D.Double(currNode.getLocation().x(), currNode.getLocation().y());
                 currPoint = scale.convert(currPoint);
-//                Circle circle = new Circle(currPoint.getX(), currPoint.getY(), radius);
-//                checkBounds(circle);
-
-//                circle.setId("1");
-
-//                circle.setFill(javafx.scene.paint.Color.RED);
-
                 Button button = new Button();
                 button.setStyle(
                         "-fx-background-radius: 10em; " +
@@ -232,8 +139,8 @@ public class GraphGUI extends Application {
                                 "-fx-max-height: 30px;"
                 );
                 button.setText(String.valueOf(currNode.getKey()));
-                button.setLayoutX(currPoint.getX());
-                button.setLayoutY(currPoint.getY());
+                button.setLayoutX(currPoint.getX() - radius/2);
+                button.setLayoutY(currPoint.getY() - radius/2);
                 checkBounds(button);
                 button.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -248,8 +155,6 @@ public class GraphGUI extends Application {
                         stage.show();
                     }
                 });start();
-
-//                root.getChildren().add(circle);
                 root.getChildren().add(button);
                 nodeList.add(button);
             }
