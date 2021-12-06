@@ -32,9 +32,9 @@ public class NodeLocation implements GeoLocation, Serializable {
 
     @Override
     public double distance(GeoLocation g) {
-        double distX = this.x - g.x();
-        double distY = this.y - g.y();
-        double distZ = this.z - g.z();
+        double distX = Math.abs(this.x - g.x());
+        double distY = Math.abs(this.y - g.y());
+        double distZ = Math.abs(this.z - g.z());
         return Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2) + Math.pow(distZ,2));
     }
 }
