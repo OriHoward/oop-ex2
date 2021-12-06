@@ -231,7 +231,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-
         int counter = 0;
         for (int i = 0; i < cities.size(); i++) {
             dijkstra(i);

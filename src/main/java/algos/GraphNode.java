@@ -87,7 +87,7 @@ public class GraphNode implements NodeData, Serializable {
     @Override
     public String getInfo() {
         return "position: " + location.x() + ", " + location.y() + ", " + location.z() + "" +
-                "weight: " + this.getWeight() + "id: " + this.id;
+                " id: " + this.id;
     }
 
     @Override
