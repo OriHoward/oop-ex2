@@ -1,3 +1,4 @@
+import GUI.GraphGUI;
 import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraphAlgorithms;
 
@@ -6,5 +7,10 @@ public class Main {
 
         DirectedWeightedGraphAlgorithms algos = new DirectedGraphAlgorithms();
         algos.load("data/G1.json");
+        GraphGUI.main(args);
     }
+
 }
+
+
+

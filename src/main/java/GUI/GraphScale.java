@@ -1,21 +1,21 @@
 package GUI;
 
-import algos.DirectedGraph;
+import algos.DirectedGraphAlgorithms;
 import api.NodeData;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
 
 public class GraphScale {
-    DirectedGraph graph;
+    DirectedGraphAlgorithms algos;
     Point2D minPoint;
     Point2D maxPoint;
     int width;
     int height;
 
 
-    public GraphScale(DirectedGraph graph, int width, int height) {
-        this.graph = graph;
+    public GraphScale(DirectedGraphAlgorithms graph, int width, int height) {
+        this.algos = graph;
         this.width = width;
         this.height = height;
         this.minPoint = new Point2D.Double();
@@ -24,11 +24,11 @@ public class GraphScale {
 
 
     public void setRange() {
-        double minX = Integer.MIN_VALUE;
-        double minY = Integer.MIN_VALUE;
+        double minX = Integer.MAX_VALUE;
+        double minY = Integer.MAX_VALUE;
         double maxX = Integer.MIN_VALUE;
         double maxY = Integer.MIN_VALUE;
-        Iterator<NodeData> nodeIter = this.graph.nodeIter();
+        Iterator<NodeData> nodeIter = this.algos.getGraph().nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currNode = nodeIter.next();
             minX = Math.min(currNode.getLocation().x(),minX);
@@ -44,10 +44,12 @@ public class GraphScale {
         setRange();
         double rangeOfX = Math.abs(this.minPoint.getX() - this.maxPoint.getX());
         double rangeOfY = Math.abs(this.minPoint.getY() - this.maxPoint.getY());
-        double currPercentageOfX = (point.getX()/rangeOfX);
-        double currPercentageOfY = (point.getY()/rangeOfY);
+        double distX = Math.abs(this.maxPoint.getX() - point.getX());
+        double distY = Math.abs(this.maxPoint.getY() - point.getY());
+        double currPercentageOfX = (distX/rangeOfX);
+        double currPercentageOfY = (distY/rangeOfY);
         double newLocationX = this.width*currPercentageOfX;
-        double newLocationY = this.width*currPercentageOfY;
+        double newLocationY = this.height*currPercentageOfY;
         point.setLocation(newLocationX,newLocationY);
         return point;
     }
