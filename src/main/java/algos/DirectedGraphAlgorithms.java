@@ -5,7 +5,10 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import org.apache.commons.lang.SerializationUtils;
+import org.w3c.dom.Node;
 
+import java.awt.image.AreaAveragingScaleFilter;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
@@ -200,6 +203,25 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+
+        int counter = 0;
+        for (int i = 0; i < cities.size(); i++) {
+            dijkstra(i);
+            for (int j = 0; j < prev.length; j++) {
+                if (prev[j] != null) {
+                    for (int k = 0; k < prev[j].size(); k++) {
+                        if (cities.contains(prev[j].get(k))) {
+                            counter++;
+                        }
+                    }
+                    if (counter == cities.size()) {
+                        return prev[j];
+                    }
+                }
+                counter = 0;
+
+            }
+        }
         return null;
     }
 

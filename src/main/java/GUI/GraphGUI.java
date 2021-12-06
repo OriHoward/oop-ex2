@@ -113,18 +113,18 @@ public class GraphGUI extends Application {
         }
 
 
-        private int checkQuarter(Circle startPoint, Circle endPoint) {
-            if (endPoint.getCenterX() > startPoint.getCenterX() && endPoint.getCenterY() > startPoint.getCenterY()) {
-                return 1;
-            }
-            if (endPoint.getCenterY() > startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
-                return 2;
-            }
-            if (endPoint.getCenterY() < startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
-                return 3;
-            }
-            return 4;
-        }
+//        private int checkQuarter(Circle startPoint, Circle endPoint) {
+//            if (endPoint.getCenterX() > startPoint.getCenterX() && endPoint.getCenterY() > startPoint.getCenterY()) {
+//                return 1;
+//            }
+//            if (endPoint.getCenterY() > startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
+//                return 2;
+//            }
+//            if (endPoint.getCenterY() < startPoint.getCenterY() && endPoint.getCenterX() < startPoint.getCenterX()) {
+//                return 3;
+//            }
+//            return 4;
+//        }
 
         private double calculateDist(Circle startPoint, Circle endPoint) {
             double distX = Math.pow(Math.abs(startPoint.getCenterX() - endPoint.getCenterX()), 2);

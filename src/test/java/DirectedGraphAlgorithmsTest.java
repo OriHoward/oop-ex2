@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,10 +69,28 @@ class DirectedGraphAlgorithmsTest {
         algos.load("dataTests/centerTest.json");
         NodeData expectedNode = algos.getGraph().getNode(2);
         assertEquals(expectedNode, algos.center());
+        algos.load("data/1000Nodes.json");
+        NodeData expectedNode2 = algos.getGraph().getNode(362);
+        assertEquals(expectedNode2, algos.center());
     }
 
     @Test
     void tsp() {
+        algos.load("data/G1.json");
+        List<NodeData> randomList = new ArrayList<>();
+
+        randomList.add(algos.getGraph().getNode(5));
+        randomList.add(algos.getGraph().getNode(2));
+        randomList.add(algos.getGraph().getNode(9));
+        randomList.add(algos.getGraph().getNode(11));
+        randomList.add(algos.getGraph().getNode(13));
+        randomList.add(algos.getGraph().getNode(6));
+        randomList.add(algos.getGraph().getNode(14));
+
+        algos.tsp(randomList);
+        for (int i = 0; i < randomList.size(); i++) {
+            System.out.println(randomList.get(i).getKey());
+        }
     }
 
     @Test
