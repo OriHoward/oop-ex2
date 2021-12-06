@@ -13,6 +13,13 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     DirectedGraph currGraph;
     Double[] dist;
     List<NodeData>[] prev;
+    Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2) -> {
+        double firstDist = dist[n1.getKey()];
+        double secondDist = dist[n2.getKey()];
+        if (firstDist == secondDist)
+            return 0;
+        return firstDist - secondDist > 0 ? 1 : -1;
+    };
 
     public Double[] getDist() {
         return dist;
@@ -121,8 +128,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     public void dijkstra(int src) {
         dist[src] = 0.0;
-        Comparator<NodeData> byWeight = Comparator.comparing((NodeData n) -> dist[n.getKey()]);
-        Queue<NodeData> toScan = new PriorityQueue<>(byWeight.reversed());
+        Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
 
         while (nodesIter.hasNext()) {
@@ -166,35 +172,18 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         NodeData currNode;
         double currMinMax = Integer.MAX_VALUE;
         int chosenNode = 0;
-        HashSet<Integer> passed = new HashSet<>();
         while (nodeIter.hasNext()) {
             currNode = nodeIter.next();
-            if (!passed.contains(currNode.getKey())) {
-
-                dijkstra(currNode.getKey());
-                int minmaxIdx = findMax();
-                if (dist[minmaxIdx] < currMinMax) {
-                    currMinMax = dist[minmaxIdx];
-                    chosenNode = currNode.getKey();
-                }
-                addMinimalSources(minmaxIdx, passed);
-                System.out.println(passed.size());
+            dijkstra(currNode.getKey());
+            int minmaxIdx = findMax();
+            if (dist[minmaxIdx] < currMinMax) {
+                currMinMax = dist[minmaxIdx];
+                chosenNode = currNode.getKey();
             }
         }
-
         return this.currGraph.getNode(chosenNode);
     }
 
-    private void addMinimalSources(int minmaxIdx, HashSet<Integer> passed) {
-        for (NodeData scannedNode : prev[minmaxIdx]) {
-            GraphNode currNode = (GraphNode) scannedNode;
-            Iterator<EdgeData> nodeNeighbors = currNode.getDestMap().values().iterator();
-            passed.add(scannedNode.getKey());
-            while (nodeNeighbors.hasNext()) {
-                passed.add(nodeNeighbors.next().getSrc());
-            }
-        }
-    }
 
     private int findMax() {
         double max = dist[0];
