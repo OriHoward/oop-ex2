@@ -5,11 +5,10 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import org.apache.commons.lang.SerializationUtils;
-import org.w3c.dom.Node;
 
-import java.awt.image.AreaAveragingScaleFilter;
-import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
@@ -123,6 +122,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
+        if (src == dest) {
+            return null;
+        }
         dijkstra(src);
         List<NodeData> fullPath = prev[dest];
         fullPath.add(this.currGraph.nodeMap.get(dest));
@@ -231,21 +233,29 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        int counter = 0;
+        List<List<NodeData>> paths = new ArrayList<>();
+        HashMap<Double, List<NodeData>> pathMap = new HashMap<>();
+
         for (int i = 0; i < cities.size(); i++) {
-            dijkstra(i);
-            for (int j = 0; j < prev.length; j++) {
-                if (prev[j] != null) {
-                    for (int k = 0; k < prev[j].size(); k++) {
-                        if (cities.contains(prev[j].get(k))) {
-                            counter++;
-                        }
-                    }
-                    if (counter == cities.size()) {
-                        return prev[j];
-                    }
+            for (int j = 0; j < cities.size(); j++) {
+                int firstNodeId = cities.get(i).getKey();
+                int secondNodeId = cities.get(j).getKey();
+                if (firstNodeId == secondNodeId) {
+                    continue;
+                } else {
+                    double pathCost = 0;
+                    List<NodeData> firstDirection = shortestPath(firstNodeId, secondNodeId);
+                    pathCost += dist[secondNodeId];
+                    init(currGraph);
+                    List<NodeData> secondDirection = shortestPath(secondNodeId, firstNodeId);
+                    pathCost += dist[firstNodeId];
+                    init(currGraph);
+                    List<NodeData> joinedPath = Stream.of(firstDirection, secondDirection)
+                            .flatMap(x -> x.stream())
+                            .collect(Collectors.toList());
+
+                    pathMap.put(pathCost, joinedPath);
                 }
-                counter = 0;
             }
         }
         return null;
