@@ -61,7 +61,6 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
             return false;
         }
 
-        //reverse
         scannedNodes.clear();
         Iterator<NodeData> nodeDataIterator = graphCopy.nodeIter();
         while (nodeDataIterator.hasNext()) {
@@ -80,25 +79,29 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     }
 
+    //this dfs is iterative, so it doesn't have stackoverflow when we are going over large graphs (10k nodes)
     private void dfsTraversal(DirectedGraph graph, NodeData currNode, HashSet<Integer> scannedNodes) {
-        currNode.setTag(NodeTagEnum.GRAY.getValue());
-        scannedNodes.add(currNode.getKey());
-        Iterator<EdgeData> edgeIter = graph.edgeIter(currNode.getKey());
-        while (edgeIter.hasNext()) {
-            GraphEdge currNeighEdge = (GraphEdge) edgeIter.next();
-            NodeData neighNode = graph.getNode(currNeighEdge.getDest());
-            if (neighNode.getTag() == NodeTagEnum.WHITE.getValue()) {
-                dfsTraversal(graph, neighNode, scannedNodes);
+        Stack<NodeData> dfsStack = new Stack<>();
+        dfsStack.add(currNode);
+        while (!dfsStack.isEmpty()) {
+            currNode = dfsStack.pop();
+            scannedNodes.add(currNode.getKey());
+            if (currNode.getTag() == NodeTagEnum.WHITE.getValue()) {
+                currNode.setTag(NodeTagEnum.GRAY.getValue());
+                Iterator<EdgeData> edgeIter = graph.edgeIter(currNode.getKey());
+                while (edgeIter.hasNext()) {
+                    GraphEdge currNeighEdge = (GraphEdge) edgeIter.next();
+                    dfsStack.add(graph.getNode(currNeighEdge.getDest()));
+                    int temp = currNeighEdge.getDest();
+                    currNeighEdge.setDest(currNeighEdge.getSrc());
+                    currNeighEdge.setSource(temp);
+                }
             }
-            int temp = currNeighEdge.getDest();
-            currNeighEdge.setDest(currNeighEdge.getSrc());
-            currNeighEdge.setSource(temp);
+            currNode.setTag(NodeTagEnum.BLACK.getValue());
+            GraphNode asGraphNode = (GraphNode) currNode;
+            asGraphNode.setDestMap(new HashMap<>());
+            asGraphNode.setSourceMap(new HashMap<>());
         }
-        currNode.setTag(NodeTagEnum.BLACK.getValue());
-        GraphNode asGraphNode = (GraphNode) currNode;
-        asGraphNode.setDestMap(new HashMap<>());
-        asGraphNode.setSourceMap(new HashMap<>());
-
     }
 
 
@@ -155,9 +158,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public NodeData center() {
-//        if (!isConnected()) {
-//            return null;
-//        }
+        if (!isConnected()) {
+            return null;
+        }
         // min of the longest distance
         Iterator<NodeData> nodeIter = this.getGraph().nodeIter();
         NodeData currNode;
