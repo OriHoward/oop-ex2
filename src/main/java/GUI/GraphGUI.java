@@ -11,6 +11,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -18,7 +20,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +32,7 @@ public class GraphGUI extends Application {
     DirectedGraphAlgorithms algos;
     ArrayList<Button> nodeList;
     Pane root;
-    double radius = 32;
+    double radius = 16;
 
 
     public GraphGUI() {
@@ -48,14 +49,26 @@ public class GraphGUI extends Application {
         Button exitBtn = new Button("exit");
         exitBtn.setOnAction(e -> Platform.exit());
         root.getChildren().add(exitBtn);
-        Text text = new Text(10,10,"click on each node to find more info");
+        MenuButton menuButton = new MenuButton("Options");
+        MenuItem firstItem = new MenuItem("reload different graph");
+        MenuItem secondItem = new MenuItem("clean");
+        firstItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        });
+
+        menuButton.getItems().addAll(firstItem,secondItem);
+        Text text = new Text(10, 10, "click on each node to find more info");
         text.setFont(new Font(40));
         text.setFill(GREEN);
         text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 30));
         text.setY(50);
         text.setX(50);
         text.setVisible(true);
-        Group group = new Group(root,text);
+
+        Group group = new Group(root, text,menuButton);
 
 
         AnimationTimer tm = new MyTimer();
@@ -81,23 +94,57 @@ public class GraphGUI extends Application {
                 EdgeData currEdge = edgeIter.next();
                 int srcNode = algos.getGraph().getNode(currEdge.getSrc()).getKey();
                 int destNode = algos.getGraph().getNode(currEdge.getDest()).getKey();
-                double startX = nodeList.get(srcNode).getLayoutX()  + radius/2;
-                double startY = nodeList.get(srcNode).getLayoutY()+radius/2;
-                double endX = nodeList.get(destNode).getLayoutX()+radius/2;
-                double endY = nodeList.get(destNode).getLayoutY()+radius/2;
+                double startX = nodeList.get(srcNode).getLayoutX() + radius;
+                double startY = nodeList.get(srcNode).getLayoutY()+ radius;
+                double endX = nodeList.get(destNode).getLayoutX()+ radius;
+                double endY = nodeList.get(destNode).getLayoutY()+ radius;
+                double startAngle = startAngleInBetween(startX,startY,endX,endY);
+                Point2D endPoint = correctPoint(endX,endY,startAngle);
+                double endAngle = endAngleInBetween(startX,startY,endX,endY);
+                Point2D startPoint = correctPoint(startX,startY,endAngle);
+                double correctEndX = endPoint.getX();
+                double correctEndY = endPoint.getY();
+                double correctStartX = startPoint.getX();
+                double correctStartY = startPoint.getY();
                 Line line = new Line();
                 line.setStyle("-fx-stroke: blue;");
-                line.setStartX(startX);
-                line.setStartY(startY);
-                line.setEndX(endX);
-                line.setEndY(endY);
-                drawArrow(startX,startY,endX,endY);
+                line.setStartX(correctStartX);
+                line.setStartY(correctStartY);
+                line.setEndX(correctEndX);
+                line.setEndY(correctEndY);
+                drawArrow(correctStartX,correctStartY, correctEndX,correctEndY);
                 root.getChildren().add(line);
             }
         }
 
-        private void drawArrow(double strPx, double strPy, double endPx,double endPy) {
-            double dist = calculateDist(strPx,strPy,endPx,endPy);
+        private double endAngleInBetween(double p1X, double p1Y, double p2X, double p2Y) {
+            double distX = p2X-p1X;
+            double distY = p2Y-p1Y;
+            double angle = -Math.atan2(distX, distY);
+            angle = Math.toRadians(Math.toDegrees(angle) + 180);
+            return angle;
+        }
+
+
+        private double startAngleInBetween(double p1X, double p1Y, double p2X, double p2Y) {
+            double distX = p1X - p2X;
+            double distY = p1Y - p2Y;
+            double angle = -Math.atan2(distX, distY);
+            angle = Math.toRadians(Math.toDegrees(angle) + 180);
+            return angle;
+        }
+
+        private Point2D correctPoint(double x, double y, double angle) {
+            angle = angle - Math.toRadians(90.0);
+            double newPosX = Math.round((float) (x + Math.cos(angle) * radius));
+            double newPosY = Math.round((float) (y + Math.sin(angle) * radius));
+            return new Point2D.Double(newPosX, newPosY);
+        }
+
+
+
+        private void drawArrow(double strPx, double strPy, double endPx, double endPy) {
+            double dist = calculateDist(strPx, strPy, endPx, endPy);
             double leftX = endPx + ((15 / dist) * (((strPx - endPx) * Math.cos(50)) + ((strPy - endPy) * (Math.sin(50)))));
             double leftY = endPy + ((15 / dist) * (((strPy - endPy) * Math.cos(50)) - ((strPx - endPx) * (Math.sin(50)))));
             double rightX = endPx + ((15 / dist) * (((strPx - endPx) * Math.cos(50)) - ((strPy - endPy) * (Math.sin(50)))));
@@ -117,7 +164,7 @@ public class GraphGUI extends Application {
             root.getChildren().addAll(leftLine, rightLine);
         }
 
-        private double calculateDist(double strPx, double strPy, double endPx,double endPy) {
+        private double calculateDist(double strPx, double strPy, double endPx, double endPy) {
             double distX = Math.pow(Math.abs(strPx - endPx), 2);
             double distY = Math.pow(Math.abs(strPy - endPy), 2);
             return Math.sqrt(distX + distY);
@@ -139,22 +186,20 @@ public class GraphGUI extends Application {
                                 "-fx-max-height: 30px;"
                 );
                 button.setText(String.valueOf(currNode.getKey()));
-                button.setLayoutX(currPoint.getX() - radius/2);
-                button.setLayoutY(currPoint.getY() - radius/2);
+                button.setLayoutX(currPoint.getX() - radius);
+                button.setLayoutY(currPoint.getY() - radius);
                 checkBounds(button);
-                button.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        Stage stage = new Stage();
-                        stage.setTitle("Info about the Node");
-                        Text text = new Text(50,50,currNode.getInfo());
-                        text.setFont(new Font(40));
-                        text.setVisible(true);
-                        Scene scene = new Scene(new Group(text));
-                        stage.setScene(scene);
-                        stage.show();
-                    }
-                });start();
+                button.setOnAction(actionEvent -> {
+                    Stage stage = new Stage();
+                    stage.setTitle("Info about the Node");
+                    Text text = new Text(50, 50, currNode.getInfo());
+                    text.setFont(new Font(40));
+                    text.setVisible(true);
+                    Scene scene = new Scene(new Group(text));
+                    stage.setScene(scene);
+                    stage.show();
+                });
+                start();
                 root.getChildren().add(button);
                 nodeList.add(button);
             }
@@ -162,24 +207,24 @@ public class GraphGUI extends Application {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // Do nothing
+                System.out.println("ERROR");
             }
         }
 
         private void checkBounds(Button button) {
             double centerX = button.getLayoutX();
             double centerY = button.getLayoutY();
-            if (centerY > HEIGHT - radius) {
-                button.setLayoutY(centerY - radius);
+            if (centerY > HEIGHT - radius * 2) {
+                button.setLayoutY(centerY - radius * 2);
             }
-            if (centerY < 0 + radius) {
-                button.setLayoutY(centerY + radius);
+            if (centerY < 0 + radius * 2) {
+                button.setLayoutY(centerY + radius * 2);
             }
-            if (centerX > WIDTH - radius) {
-                button.setLayoutX(centerX - radius);
+            if (centerX > WIDTH - radius * 2) {
+                button.setLayoutX(centerX - radius * 2);
             }
-            if (centerX < 0 + radius) {
-                button.setLayoutX(centerX + radius);
+            if (centerX < 0 + radius * 2) {
+                button.setLayoutX(centerX + radius * 2);
             }
         }
     }
