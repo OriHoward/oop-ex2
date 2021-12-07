@@ -37,7 +37,7 @@ public class GraphGUI extends Application {
 
     public GraphGUI() {
         algos = new DirectedGraphAlgorithms();
-        algos.load("data/G1.json");
+        algos.load("data/G2.json");
         nodeList = new ArrayList<>();
     }
 
@@ -48,6 +48,8 @@ public class GraphGUI extends Application {
         root = new Pane();
         Button exitBtn = new Button("exit");
         exitBtn.setOnAction(e -> Platform.exit());
+        exitBtn.setLayoutX(WIDTH -50);
+        exitBtn.setLayoutY(0);
         root.getChildren().add(exitBtn);
         MenuButton menuButton = new MenuButton("Options");
         MenuItem firstItem = new MenuItem("reload different graph");
