@@ -1,10 +1,12 @@
+package RunAlgos;
+
 import GUI.GraphGUI;
 import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
 /**
- * This class is the main class for Ex2 - your implementation will be tested using this class.
+ * This class is the main class for RunAlgos.Ex2 - your implementation will be tested using this class.
  */
 public class Ex2 {
     /**
@@ -45,6 +47,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        runGUI("data/G3.json");
+        runGUI("data/G1.json");
     }
 }
