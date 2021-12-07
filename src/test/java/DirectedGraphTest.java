@@ -33,6 +33,19 @@ class DirectedGraphTest {
     }
 
     @Test
+    void iterForeach() {
+        algos.load("dataTests/isConnected.json");
+        DirectedWeightedGraph graph = algos.getGraph();
+        Iterator<EdgeData> currIter = graph.edgeIter(0);
+        List<Integer> actualList = new ArrayList<>();
+        List<Integer> listFromIter = new ArrayList<>();
+        actualList.add(1);
+        actualList.add(2);
+        currIter.forEachRemaining(edgeData -> listFromIter.add(edgeData.getDest()));
+        assertEquals(listFromIter, actualList);
+    }
+
+    @Test
     void nodeIter() {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             DirectedWeightedGraph graph = algos.getGraph();
@@ -77,15 +90,4 @@ class DirectedGraphTest {
         });
     }
 
-    @Test
-    void iterForeach() {
-        DirectedWeightedGraph graph = algos.getGraph();
-        Iterator<EdgeData> currIter = graph.edgeIter(0);
-        List<Integer> actualList = new ArrayList<>();
-        List<Integer> listFromIter = new ArrayList<>();
-        actualList.add(1);
-        actualList.add(2);
-        currIter.forEachRemaining(edgeData -> listFromIter.add(edgeData.getDest()));
-        assertEquals(listFromIter, actualList);
-    }
 }
