@@ -1,6 +1,7 @@
 package algos;
 
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class DecoratedGraphIterator<T> implements Iterator<T> {
 
@@ -26,5 +27,15 @@ public class DecoratedGraphIterator<T> implements Iterator<T> {
     public T next() {
         this.graph.hasChanged(this.MCount);
         return graphIter.next();
+    }
+
+    @Override
+    public void remove() {
+        graphIter.remove();
+    }
+
+    @Override
+    public void forEachRemaining(Consumer<? super T> action) {
+        graphIter.forEachRemaining(action);
     }
 }

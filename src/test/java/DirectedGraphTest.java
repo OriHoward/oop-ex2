@@ -7,8 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -72,5 +75,17 @@ class DirectedGraphTest {
                 counter += 1;
             }
         });
+    }
+
+    @Test
+    void iterForeach() {
+        DirectedWeightedGraph graph = algos.getGraph();
+        Iterator<EdgeData> currIter = graph.edgeIter(0);
+        List<Integer> actualList = new ArrayList<>();
+        List<Integer> listFromIter = new ArrayList<>();
+        actualList.add(1);
+        actualList.add(2);
+        currIter.forEachRemaining(edgeData -> listFromIter.add(edgeData.getDest()));
+        assertEquals(listFromIter, actualList);
     }
 }
