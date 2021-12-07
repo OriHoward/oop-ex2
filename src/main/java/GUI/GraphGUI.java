@@ -1,46 +1,31 @@
 package GUI;
 
 import algos.DirectedGraphAlgorithms;
-import api.EdgeData;
-import api.NodeData;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import static javafx.scene.paint.Color.GREEN;
 
 public class GraphGUI extends Application {
     final int WIDTH = 1080;
     final int HEIGHT = 800;
-    DirectedGraphAlgorithms algos;
-    ArrayList<Button> nodeList;
+    static DirectedGraphAlgorithms algos;
+    ArrayList<Button> nodeList = new ArrayList<>();
     Pane root;
     double radius = 16;
-
-
-    public GraphGUI() {
-        algos = new DirectedGraphAlgorithms();
-        algos.load("data/G1.json");
-        nodeList = new ArrayList<>();
-    }
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -76,8 +61,8 @@ public class GraphGUI extends Application {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args, DirectedGraphAlgorithms graphAlgo) {
+        algos = graphAlgo;
         launch(args);
-
     }
 }
