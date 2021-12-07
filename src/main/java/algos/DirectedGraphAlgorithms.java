@@ -132,6 +132,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
     public void dijkstra(int src) {
+        init(currGraph);
         dist[src] = 0.0;
         Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
@@ -232,33 +233,66 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
 
     @Override
+    /**
+     * for each remaining node after we found the minimal circle containing the maximum amount of nodes we try to add it the circle with the lowest cost
+     * if the node was added filter the remaining cities because it might have added other cities during that trip, continue until no cities left
+     */
     public List<NodeData> tsp(List<NodeData> cities) {
         List<List<NodeData>> paths = new ArrayList<>();
-        HashMap<Double, List<NodeData>> pathMap = new HashMap<>();
+        HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
+        List<NodeData> bestCircle = getShortestMaxCircle(cities);
+        clearVisitedCities(bestCircle, cities);
+
+        return null;
+    }
+
+    private void clearVisitedCities(List<NodeData> bestCircle, List<NodeData> cities) {
+        for (NodeData node : bestCircle) {
+            cities.remove(node);
+        }
+    }
+
+    public List<NodeData> getShortestMaxCircle(List<NodeData> cities) {
+        HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
 
         for (int i = 0; i < cities.size(); i++) {
             for (int j = 0; j < cities.size(); j++) {
                 int firstNodeId = cities.get(i).getKey();
                 int secondNodeId = cities.get(j).getKey();
-                if (firstNodeId == secondNodeId) {
-                    continue;
-                } else {
+                if (firstNodeId != secondNodeId) {
                     double pathCost = 0;
                     List<NodeData> firstDirection = shortestPath(firstNodeId, secondNodeId);
                     pathCost += dist[secondNodeId];
-                    init(currGraph);
                     List<NodeData> secondDirection = shortestPath(secondNodeId, firstNodeId);
                     pathCost += dist[firstNodeId];
-                    init(currGraph);
+                    firstDirection.remove(firstDirection.size() - 1);
                     List<NodeData> joinedPath = Stream.of(firstDirection, secondDirection)
                             .flatMap(x -> x.stream())
                             .collect(Collectors.toList());
 
-                    pathMap.put(pathCost, joinedPath);
+                    pathMap.put(joinedPath, pathCost);
                 }
             }
         }
-        return null;
+
+        int maxParticipants = 0;
+        List<NodeData> bestCircle = null;
+        for (List<NodeData> circle : pathMap.keySet()) {
+            HashSet<Integer> currParticipants = new HashSet<>();
+            for (NodeData city : cities) {
+                if (circle.contains(city)) {
+                    currParticipants.add(city.getKey());
+                }
+            }
+            if (currParticipants.size() > maxParticipants) {
+                bestCircle = circle;
+                maxParticipants = currParticipants.size();
+            } else if (currParticipants.size() == maxParticipants && bestCircle != null && pathMap.get(circle) < pathMap.get(bestCircle)) {
+                bestCircle = circle;
+            }
+        }
+
+        return bestCircle;
     }
 
     @Override
@@ -266,13 +300,17 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         try {
             FileWriter fileWriter = new FileWriter(file);
             JsonSerializer<NodeData> posSerializer = new PosSerializer();
-            Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(GraphNode.class,posSerializer).setPrettyPrinting().create();
+            Gson gsonBuilder = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .registerTypeAdapter(GraphNode.class, posSerializer)
+                    .setPrettyPrinting()
+                    .create();
             JsonArray nodeArray = gsonBuilder.toJsonTree(currGraph.nodeMap.values()).getAsJsonArray();
             JsonArray edgeArray = gsonBuilder.toJsonTree(currGraph.getParsedEdges()).getAsJsonArray();
             JsonObject jsonObj = new JsonObject();
-            jsonObj.add("Edges",edgeArray);
-            jsonObj.add("Nodes",nodeArray);
-            gsonBuilder.toJson(jsonObj,fileWriter);
+            jsonObj.add("Edges", edgeArray);
+            jsonObj.add("Nodes", nodeArray);
+            gsonBuilder.toJson(jsonObj, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
