@@ -3,20 +3,22 @@ package algos;
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
+import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class GraphNode implements NodeData, Serializable {
-    private GeoLocation location;
-    private int id;
+    @Expose private GeoLocation pos;
+    @Expose private int id;
     private double weight;
+
     private HashMap<Integer, EdgeData> destMap;
     private HashMap<Integer, EdgeData> sourceMap;
     private NodeTagEnum tag;
 
     public GraphNode(GeoLocation location, int id) {
-        this.location = new NodeLocation(location.x(), location.y(), location.z());
+        this.pos = new NodeLocation(location.x(), location.y(), location.z());
         this.id = id;
         this.weight = 0;
         this.destMap = new HashMap<>();
@@ -66,12 +68,12 @@ public class GraphNode implements NodeData, Serializable {
 
     @Override
     public GeoLocation getLocation() {
-        return this.location;
+        return this.pos;
     }
 
     @Override
     public void setLocation(GeoLocation p) {
-        this.location = new NodeLocation(p.x(), p.y(), p.z());
+        this.pos = new NodeLocation(p.x(), p.y(), p.z());
     }
 
     @Override
@@ -86,7 +88,7 @@ public class GraphNode implements NodeData, Serializable {
 
     @Override
     public String getInfo() {
-        return "position: " + location.x() + ", " + location.y() + ", " + location.z() + "" +
+        return "position: " + pos.x() + ", " + pos.y() + ", " + pos.z() + "" +
                 " id: " + this.id;
     }
 

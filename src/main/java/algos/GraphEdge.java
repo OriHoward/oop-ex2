@@ -1,13 +1,17 @@
 package algos;
 
 import api.EdgeData;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class GraphEdge implements EdgeData, Serializable {
-    private int source;
-    private int dest;
-    private double weight;
+    @SerializedName(value = "src")
+    @Expose private int source;
+    @SerializedName(value = "w")
+    @Expose private double weight;
+    @Expose private int dest;
 
     public void setSource(int source) {
         this.source = source;

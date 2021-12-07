@@ -4,8 +4,11 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
+import com.google.gson.*;
 import org.apache.commons.lang.SerializationUtils;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -260,7 +263,22 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public boolean save(String file) {
-        return false;
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            JsonSerializer<NodeData> posSerializer = new PosSerializer();
+            Gson gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(GraphNode.class,posSerializer).setPrettyPrinting().create();
+            JsonArray nodeArray = gsonBuilder.toJsonTree(currGraph.nodeMap.values()).getAsJsonArray();
+            JsonArray edgeArray = gsonBuilder.toJsonTree(currGraph.getParsedEdges()).getAsJsonArray();
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.add("Edges",edgeArray);
+            jsonObj.add("Nodes",nodeArray);
+            gsonBuilder.toJson(jsonObj,fileWriter);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
