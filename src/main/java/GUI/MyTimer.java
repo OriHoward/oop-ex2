@@ -132,11 +132,11 @@ public class MyTimer extends AnimationTimer {
             currPoint = scale.convert(currPoint);
             Button button = new Button();
             button.setStyle(
-                    "-fx-background-radius: 10em; " +
-                            "-fx-min-width: 30px; " +
-                            "-fx-min-height: 30px; " +
-                            "-fx-max-width: 30px; " +
-                            "-fx-max-height: 30px;"
+                    "-fx-background-radius: 8em; " +
+                            "-fx-min-width: 20px; " +
+                            "-fx-min-height: 20px; " +
+                            "-fx-max-width: 20px; " +
+                            "-fx-max-height: 20px;"
             );
             button.setText(String.valueOf(currNode.getKey()));
             button.setLayoutX(currPoint.getX() - this.radius);
