@@ -3,6 +3,7 @@ package GUI;
 import algos.DirectedGraphAlgorithms;
 import algos.GraphNode;
 import algos.NodeLocation;
+import api.DirectedWeightedGraph;
 import api.NodeData;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,13 +19,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class GraphGUI extends Application {
     ArrayList<Button> nodeList = new ArrayList<>();
     Pane root;
     double radius = 10;
+    DirectedWeightedGraph originalGraphCopy =  algos.copy();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -70,7 +72,16 @@ public class GraphGUI extends Application {
         MenuItem center = new MenuItem("center");
         MenuItem tsp = new MenuItem("tsp");
         Button clean = new Button("clean");
-
+        Button reset = new Button("reset");
+        reset.setOnAction(actionEvent -> {
+            algos.init(originalGraphCopy);
+            primaryStage.close();
+            try {
+                start(primaryStage);
+            } catch (Exception exep) {
+                exep.printStackTrace();
+            }
+        });
         clean.setOnAction(actionEvent -> {
             for (int i = 0; i < nodeList.size(); i++) {
                 Button currButton = nodeList.get(i);
@@ -85,7 +96,7 @@ public class GraphGUI extends Application {
         });
 
         ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(file, edit, run, clean);
+        toolBar.getItems().addAll(file, edit, run, clean,reset);
 
 
         run.getItems().addAll(isConnected, shortestPathDist, shortestPath, center, tsp);
@@ -142,8 +153,10 @@ public class GraphGUI extends Application {
         // run Algorithms options:
         addNode.setOnAction(actionEvent -> {
             Stage stage = new Stage();
-            Label valueX = new Label("enter coordinate of X in range: 0 - " + WIDTH);
-            Label valueY = new Label("enter coordinate of Y in range: 0 - " + HEIGHT);
+            Point2D minPoint = findMinPoint();
+            Point2D maxPoint = findMaxPoint();
+            Label valueX = new Label("enter coordinate of X in range: " + minPoint.getX() + " - " + maxPoint.getX());
+            Label valueY = new Label("enter coordinate of Y in range: " + minPoint.getY() + " - " + maxPoint.getY());
             Label id = new Label("enter node ID in range: 0 - " + algos.getGraph().nodeSize());
             TextField textFieldX = new TextField();
             TextField textFieldY = new TextField();
@@ -155,7 +168,7 @@ public class GraphGUI extends Application {
                     double x = Double.parseDouble(textFieldX.getText());
                     double y = Double.parseDouble(textFieldY.getText());
                     int nodeId = Integer.parseInt(textFieldId.getText());
-                    if (x > WIDTH || x< 0 || y> HEIGHT || y<0 || nodeId <0 || nodeId > algos.getGraph().nodeSize()) {
+                    if (x > maxPoint.getX() || x< minPoint.getX() || y> maxPoint.getY() || y<minPoint.getY() || nodeId <0 || nodeId > algos.getGraph().nodeSize()) {
                         nodeErrorPopUp();
                     }
                     else{
@@ -175,7 +188,7 @@ public class GraphGUI extends Application {
             layout.setPadding(new Insets(20, 20, 20, 20));
             layout.getChildren().addAll(valueX, textFieldX, valueY, textFieldY, id,textFieldId,button);
 
-            Scene sc = new Scene(layout, 300, 300);
+            Scene sc = new Scene(layout, 600, 300);
             stage.setScene(sc);
             stage.show();
 
@@ -247,6 +260,12 @@ public class GraphGUI extends Application {
                     "-fx-max-height: 20px;"
             );
         });
+
+        runTsp(tsp);
+    }
+
+
+    private void runTsp(MenuItem tsp) {
         tsp.setOnAction(actionEvent -> {
             Stage stage = new Stage();
             List<NodeData> addedNodes = new LinkedList<>();
@@ -280,6 +299,31 @@ public class GraphGUI extends Application {
             stage.setScene(sc);
             stage.show();
         });
+    }
+
+
+    private Point2D findMinPoint() {
+        double minX = Integer.MAX_VALUE;
+        double minY = Integer.MAX_VALUE;
+        Iterator<NodeData> nodeIter = algos.getGraph().nodeIter();
+        while (nodeIter.hasNext()) {
+            NodeData currNode = nodeIter.next();
+            minX = Math.min(currNode.getLocation().x(), minX);
+            minY = Math.min(currNode.getLocation().y(), minY);
+        }
+        return new Point2D(minX, minY);
+    }
+
+    private Point2D findMaxPoint() {
+        double maxX = Integer.MIN_VALUE;
+        double maxY = Integer.MIN_VALUE;
+        Iterator<NodeData> nodeIter = algos.getGraph().nodeIter();
+        while (nodeIter.hasNext()) {
+            NodeData currNode = nodeIter.next();
+            maxX = Math.max(currNode.getLocation().x(),maxX);
+            maxY = Math.max(currNode.getLocation().y(),maxY);
+        }
+        return new Point2D(maxX,maxY);
     }
 
     private void nodeErrorPopUp() {
