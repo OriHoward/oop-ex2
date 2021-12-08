@@ -33,6 +33,7 @@ public class MyTimer extends AnimationTimer {
         this.nodeList = nodeList;
         this.width = width;
         this.height = height;
+
     }
 
     @Override

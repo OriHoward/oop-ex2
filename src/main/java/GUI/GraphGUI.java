@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static javafx.scene.paint.Color.GREEN;
@@ -56,7 +57,7 @@ public class GraphGUI extends Application {
         nodes.getItems().addAll(addNode, removeNode);
         edges.getItems().addAll(addEdge, removeEdge);
         edit.getItems().addAll(nodes, edges);
-        edit.setLayoutX(50);
+
 
         MenuButton run = new MenuButton("RunAlgorithm");
         MenuItem isConnected = new MenuItem("isConnected");
@@ -64,7 +65,23 @@ public class GraphGUI extends Application {
         MenuItem shortestPath = new MenuItem("shortestPath");
         MenuItem center = new MenuItem("center");
         MenuItem tsp = new MenuItem("tsp");
-        run.setLayoutX(102);
+        Button clean = new Button("clean");
+        clean.setOnAction(actionEvent -> {
+            for (int i = 0; i < nodeList.size(); i++) {
+                Button currButton = nodeList.get(i);
+                currButton.setStyle(
+                        "-fx-background-radius: 8em; " +
+                                "-fx-min-width: 20px; " +
+                                "-fx-min-height: 20px; " +
+                                "-fx-max-width: 20px; " +
+                                "-fx-max-height: 20px;"
+                );
+            }
+        });
+
+        ToolBar toolBar = new ToolBar();
+        toolBar.getItems().addAll(file, edit, run, clean);
+
 
         run.getItems().addAll(isConnected, shortestPathDist, shortestPath, center, tsp);
         file.getItems().addAll(load, save, exit);
@@ -76,7 +93,7 @@ public class GraphGUI extends Application {
         text.setY(60);
         text.setVisible(true);
 
-        Group group = new Group(root, text, file, edit, run);
+        Group group = new Group(root, toolBar, text);
 
         AnimationTimer tm = new MyTimer(algos, root, radius, nodeList, WIDTH, HEIGHT);
         tm.start();
@@ -101,6 +118,7 @@ public class GraphGUI extends Application {
             }
         });
 
+        //todo option to choose where to save.
         save.setOnAction(actionEvent -> {
             savePopWindow(algos.save("myGraph"));
         });
@@ -115,15 +133,32 @@ public class GraphGUI extends Application {
 
         shortestPath.setOnAction(actionEvent -> {
             Stage stage = new Stage();
-            Label source = new Label("enter source between: 0 - " + (algos.getGraph().nodeSize() -1));
-            Label dest = new Label("enter dest between: 0 - " + (algos.getGraph().nodeSize() -1));
+            Label source = new Label("enter source between: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label dest = new Label("enter dest between: 0 - " + (algos.getGraph().nodeSize() - 1));
             TextField sourceInput = new TextField();
             TextField destInput = new TextField();
             Button button = new Button("ENTER");
             button.setOnAction(e -> {
-                checkInput(algos.getGraph().nodeSize(),sourceInput,destInput);
+                shortestPath(algos.getGraph().nodeSize(), sourceInput, destInput);
             });
+            VBox layout = new VBox(10);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll(source, sourceInput, dest, destInput, button);
 
+            Scene sc = new Scene(layout, 300, 300);
+            stage.setScene(sc);
+            stage.show();
+        });
+        shortestPathDist.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            Label source = new Label("enter source between: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label dest = new Label("enter dest between: 0 - " + (algos.getGraph().nodeSize() - 1));
+            TextField sourceInput = new TextField();
+            TextField destInput = new TextField();
+            Button button = new Button("ENTER");
+            button.setOnAction(e -> {
+                shortestPathDist(algos.getGraph().nodeSize(), sourceInput, destInput);
+            });
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
             layout.getChildren().addAll(source, sourceInput, dest, destInput, button);
@@ -133,20 +168,70 @@ public class GraphGUI extends Application {
             stage.show();
         });
 
+        center.setOnAction(actionEvent -> {
+            NodeData nodeCenter = algos.center();
+            int nodeCenterNum = nodeCenter.getKey();
+            Button button = nodeList.get(nodeCenterNum);
+            button.setStyle(" -fx-background-color: black;" +
+                    "-fx-background-radius: 8em; " +
+                    "-fx-min-width: 20px; " +
+                    "-fx-min-height: 20px; " +
+                    "-fx-max-width: 20px; " +
+                    "-fx-max-height: 20px;"
+            );
+        });
+        tsp.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            List<NodeData> addedNodes = new LinkedList<>();
+            Label label = new Label("enter node number between: 0 - " + (algos.getGraph().nodeSize() - 1));
+            TextField userInput = new TextField();
+            Button button = new Button("Add");
+            Button runAlgo = new Button("runAlgo");
+            Label labelAdded = new Label();
+            StringBuilder added = new StringBuilder();
+            added.append("added Nodes: ");
+            button.setOnAction(e -> {
+                if (isInt(userInput)) {
+                    int node = Integer.parseInt(userInput.getText());
+                    added.append(userInput.getText());
+                    added.append(" ,");
+                    addedNodes.add(algos.getGraph().getNode(node));
+                    userInput.clear();
+                }
+                labelAdded.setText(added.toString());
+            });
+
+            runAlgo.setOnAction(e -> {
+                List<NodeData> result = algos.tsp(addedNodes);
+                paintTrail(result);
+            });
+
+            VBox layout = new VBox(10);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll(label, userInput, button, runAlgo,labelAdded);
+
+            Scene sc = new Scene(layout, 300, 300);
+            stage.setScene(sc);
+            stage.show();
+        });
+
 
     }
 
-    private Boolean isInt(TextField sourceInput, TextField destInput) {
-        try {
-            Integer.parseInt(sourceInput.getText());
-            Integer.parseInt(destInput.getText());
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+    private void paintTrail(List<NodeData> result) {
+        for (int i = 0; i < result.size(); i++) {
+            int nodeKey = result.get(i).getKey();
+            Button currNode = nodeList.get(nodeKey);
+            currNode.setStyle(" -fx-background-color: black;" +
+                    "-fx-background-radius: 8em; " +
+                    "-fx-min-width: 20px; " +
+                    "-fx-min-height: 20px; " +
+                    "-fx-max-width: 20px; " +
+                    "-fx-max-height: 20px;");
         }
     }
 
-    private void checkInput(int maxNum, TextField sourceInput, TextField destInput) {
+    private void shortestPath(int maxNum, TextField sourceInput, TextField destInput) {
         Stage popWindow = new Stage();
         Label label;
         if (isInt(sourceInput, destInput)) {
@@ -157,13 +242,13 @@ public class GraphGUI extends Application {
             } else {
                 sourceInput.clear();
                 destInput.clear();
-                List<NodeData> trail = algos.shortestPath(src,dest);
+                List<NodeData> trail = algos.shortestPath(src, dest);
                 StringBuilder prev = new StringBuilder();
                 prev.append("Fastest path: ");
-                for (int i = 0; i < trail.size() -1; i++) {
+                for (int i = 0; i < trail.size() - 1; i++) {
                     prev.append(trail.get(i).getKey()).append("-> ");
                 }
-                prev.append(trail.get(trail.size() -1).getKey());
+                prev.append(trail.get(trail.size() - 1).getKey());
                 label = new Label(prev.toString());
             }
         } else {
@@ -179,6 +264,53 @@ public class GraphGUI extends Application {
         popWindow.setScene(popScene);
         popWindow.showAndWait();
     }
+
+    public void shortestPathDist(int maxNum, TextField sourceInput, TextField destInput) {
+        Stage popWindow = new Stage();
+        Label label;
+        if (isInt(sourceInput, destInput)) {
+            int src = Integer.parseInt(sourceInput.getText());
+            int dest = Integer.parseInt(destInput.getText());
+            if (src > maxNum || dest > maxNum || src < 0 || dest < 0) {
+                label = new Label("please enter numbers in range");
+            } else {
+                sourceInput.clear();
+                destInput.clear();
+                label = new Label("shortest distance: " + algos.shortestPathDist(src, dest));
+            }
+        } else {
+            label = new Label("Please enter numbers only");
+        }
+        popWindow.initModality(Modality.APPLICATION_MODAL);
+        Button button = new Button("close");
+        button.setOnAction(e -> popWindow.close());
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, button);
+        layout.setAlignment(Pos.CENTER);
+        Scene popScene = new Scene(layout, 450, 400);
+        popWindow.setScene(popScene);
+        popWindow.showAndWait();
+    }
+
+    private Boolean isInt(TextField sourceInput, TextField destInput) {
+        try {
+            Integer.parseInt(sourceInput.getText());
+            Integer.parseInt(destInput.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Boolean isInt(TextField userInput) {
+        try {
+            Integer.parseInt(userInput.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     private void savePopWindow(Boolean isSaved) {
         Stage popWindow = new Stage();
