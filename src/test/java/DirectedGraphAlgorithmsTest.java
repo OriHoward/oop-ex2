@@ -83,15 +83,19 @@ class DirectedGraphAlgorithmsTest {
         randomList.add(algos.getGraph().getNode(5));
         randomList.add(algos.getGraph().getNode(2));
         randomList.add(algos.getGraph().getNode(9));
-        randomList.add(algos.getGraph().getNode(11));
-        randomList.add(algos.getGraph().getNode(13));
-        randomList.add(algos.getGraph().getNode(6));
-        randomList.add(algos.getGraph().getNode(14));
 
-        algos.tsp(randomList);
-        for (int i = 0; i < randomList.size(); i++) {
-            System.out.println(randomList.get(i).getKey());
-        }
+        List<NodeData> actualPath = new ArrayList<>();
+        actualPath.add(algos.getGraph().getNode(2));
+        actualPath.add(algos.getGraph().getNode(6));
+        actualPath.add(algos.getGraph().getNode(5));
+        actualPath.add(algos.getGraph().getNode(6));
+        actualPath.add(algos.getGraph().getNode(7));
+        actualPath.add(algos.getGraph().getNode(8));
+        actualPath.add(algos.getGraph().getNode(9));
+
+        List<NodeData> shortestPath = algos.tsp(randomList);
+
+        assertEquals(actualPath,shortestPath);
     }
 
     @Test

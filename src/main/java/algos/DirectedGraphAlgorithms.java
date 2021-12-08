@@ -13,10 +13,10 @@ import java.util.*;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
-    DirectedGraph currGraph;
-    Double[] dist;
-    List<NodeData>[] prev;
-    Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2) -> {
+    private DirectedGraph currGraph;
+    private Double[] dist;
+    private List<NodeData>[] prev;
+    private Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2) -> {
         double firstDist = dist[n1.getKey()];
         double secondDist = dist[n2.getKey()];
         if (firstDist == secondDist)
@@ -76,10 +76,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public boolean isConnected() {
-        return dfs();
+        return isConnectedDFS();
     }
 
-    public boolean dfs() {
+    public boolean isConnectedDFS() {
         DirectedGraph graphCopy = (DirectedGraph) this.copy();
         if (graphCopy == null) {
             return false;
@@ -300,7 +300,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
 
-    public List<NodeData> getOptimalPathFromList(List<NodeData> cities) {
+    private List<NodeData> getOptimalPathFromList(List<NodeData> cities) {
         HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
 
         for (int i = 0; i < cities.size(); i++) {
