@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class DecoratedGraphIterator implements Iterator{
+    - DirectedGraph graph
+    - int currIndex
+    - int MCount
+    - Iterator<T> graphIter
+
+    + DecoratedGraphIterator(Iterator<T> graphIter, DirectedGraph graph)
+    + boolean hasNext()
+    + T next()
+    + void remove()
+    + void forEachRemaining(Consumer<? super T> action)
+}
+
+class DirectedGraph implements DirectedWeightedGraph, Serializable {
+
+}
+
+class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
+
+}
+
+class GraphEdge implements EdgeData, Serializable {
+
+}
+
+class GraphNode implements NodeData, Serializable {
+
+}
+
+class NodeLocation implements GeoLocation, Serializable {
+
+}
+
+class PosSerializer implements JsonSerializer {
+}
+
+enum NodeTagEnum {
+WHITE
+GRAY
+BLACK
+}
+
+
+@enduml

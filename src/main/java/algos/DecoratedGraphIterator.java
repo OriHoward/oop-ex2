@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 public class DecoratedGraphIterator<T> implements Iterator<T> {
 
-    DirectedGraph graph;
-    int currIndex;
-    int MCount;
-    Iterator<T> graphIter;
+    private DirectedGraph graph;
+    private int currIndex;
+    private int MCount;
+    private Iterator<T> graphIter;
 
     public DecoratedGraphIterator(Iterator<T> graphIter, DirectedGraph graph) {
         currIndex = 0;
