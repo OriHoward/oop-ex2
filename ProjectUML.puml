@@ -29,19 +29,6 @@ interface DirectedWeightedGraphAlgorithms{
     + boolean load(String file)
 }
 
-class DecoratedGraphIterator implements Iterator{
-    - DirectedGraph graph
-    - int currIndex
-    - int MCount
-    - Iterator<T> graphIter
-
-    + DecoratedGraphIterator(Iterator<T> graphIter, DirectedGraph graph)
-    + boolean hasNext()
-    + T next()
-    + void remove()
-    + void forEachRemaining(Consumer<? super T> action)
-}
-
 class DirectedGraph implements DirectedWeightedGraph, Serializable {
 
     - int MCount

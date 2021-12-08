@@ -8,7 +8,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -122,17 +120,14 @@ public class GraphGUI extends Application {
             }
         });
 
-        //todo option to choose where to save.
-        save.setOnAction(actionEvent -> {
-//            DirectoryChooser directoryChooser = new DirectoryChooser();
-//            File directory = directoryChooser.showDialog(primaryStage);
-            FileChooser saveFileChooser = new FileChooser();
-            File saveFile = saveFileChooser.showOpenDialog(primaryStage);
-            if (saveFile != null) {
+        FileChooser saveFileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-                String path = saveFile.getAbsolutePath();
-                savePopWindow(algos.save(path));
-            }
+        save.setOnAction(actionEvent -> {
+            File saveFile = saveFileChooser.showSaveDialog(primaryStage);
+            fileChooser.setInitialDirectory(saveFile.getParentFile());
+            String path = saveFile.getAbsolutePath();
+            savePopWindow(algos.save(path));
         });
         exit.setOnAction(e -> Platform.exit());
 
