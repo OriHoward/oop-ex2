@@ -1,6 +1,7 @@
 import algos.DirectedGraph;
 import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraph;
+import api.EdgeData;
 import api.NodeData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,18 +96,26 @@ class DirectedGraphAlgorithmsTest {
 
         List<NodeData> shortestPath = algos.tsp(randomList);
 
-        assertEquals(actualPath,shortestPath);
+        assertEquals(actualPath, shortestPath);
+        assertNull(algos.tsp(null));
+        assertNull(algos.tsp(new ArrayList<>()));
     }
 
     @Test
-    void copy(){
+    void copy() {
         algos.load("dataTests/isConnected.json");
         DirectedWeightedGraph copyGraph = algos.copy();
-        copyGraph.connect(0,1,1.7);
+        copyGraph.connect(0, 1, 1.7);
+        ArrayList<EdgeData> originalEdges = new ArrayList<>();
+        ArrayList<EdgeData> copiedEdges = new ArrayList<>();
+
+        algos.getGraph().edgeIter().forEachRemaining(originalEdges::add);
+        copyGraph.edgeIter().forEachRemaining(copiedEdges::add);
+        assertNotEquals(originalEdges, copiedEdges);
     }
 
     @Test
-    void initTest(){
+    void initTest() {
         DirectedGraph graph = new DirectedGraph();
         graph.loadGraph("dataTests/notConnected.json");
         DirectedGraphAlgorithms algos = new DirectedGraphAlgorithms();
