@@ -20,6 +20,7 @@ public class GraphScale {
         this.height = height;
         this.minPoint = new Point2D.Double();
         this.maxPoint = new Point2D.Double();
+        setRange();
     }
 
 
@@ -41,7 +42,6 @@ public class GraphScale {
     }
 
     public Point2D convert(Point2D point) {
-        setRange();
         double rangeOfX = Math.abs(this.minPoint.getX() - this.maxPoint.getX());
         double rangeOfY = Math.abs(this.minPoint.getY() - this.maxPoint.getY());
         double distX = Math.abs(this.maxPoint.getX() - point.getX());

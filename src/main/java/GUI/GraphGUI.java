@@ -97,7 +97,6 @@ public class GraphGUI extends Application {
 
         AnimationTimer tm = new MyTimer(algos, root, radius, nodeList, WIDTH, HEIGHT);
         tm.start();
-
         Scene scene = new Scene(group, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -208,7 +207,7 @@ public class GraphGUI extends Application {
 
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
-            layout.getChildren().addAll(label, userInput, button, runAlgo,labelAdded);
+            layout.getChildren().addAll(label, userInput, button, runAlgo, labelAdded);
 
             Scene sc = new Scene(layout, 300, 300);
             stage.setScene(sc);
@@ -219,16 +218,39 @@ public class GraphGUI extends Application {
     }
 
     private void paintTrail(List<NodeData> result) {
-        for (int i = 0; i < result.size(); i++) {
-            int nodeKey = result.get(i).getKey();
-            Button currNode = nodeList.get(nodeKey);
-            currNode.setStyle(" -fx-background-color: black;" +
-                    "-fx-background-radius: 8em; " +
-                    "-fx-min-width: 20px; " +
-                    "-fx-min-height: 20px; " +
-                    "-fx-max-width: 20px; " +
-                    "-fx-max-height: 20px;");
+        Stage popWindow = new Stage();
+        Label label;
+        if (result == null) {
+            label = new Label("There is no path going through all nodes");
+        } else {
+            for (int i = 0; i < result.size(); i++) {
+                int nodeKey = result.get(i).getKey();
+                Button currNode = nodeList.get(nodeKey);
+                currNode.setStyle(" -fx-background-color: black;" +
+                        "-fx-background-radius: 8em; " +
+                        "-fx-min-width: 20px; " +
+                        "-fx-min-height: 20px; " +
+                        "-fx-max-width: 20px; " +
+                        "-fx-max-height: 20px;");
+            }
+            StringBuilder prev = new StringBuilder();
+            prev.append("Fastest tsp path: ");
+            for (int i = 0; i < result.size() - 1; i++) {
+                prev.append(result.get(i).getKey()).append("-> ");
+            }
+            prev.append(result.get(result.size() - 1).getKey());
+            label = new Label(prev.toString());
         }
+        popWindow.initModality(Modality.APPLICATION_MODAL);
+        Button button = new Button("close");
+        button.setOnAction(e -> popWindow.close());
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, button);
+        layout.setAlignment(Pos.CENTER);
+        Scene popScene = new Scene(layout, 450, 400);
+        popWindow.setScene(popScene);
+        popWindow.showAndWait();
+
     }
 
     private void shortestPath(int maxNum, TextField sourceInput, TextField destInput) {
