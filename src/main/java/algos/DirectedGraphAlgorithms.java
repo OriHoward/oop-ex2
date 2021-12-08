@@ -10,8 +10,6 @@ import org.apache.commons.lang.SerializationUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
@@ -255,16 +253,23 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     /**
-     * for each remaining node after we found the minimal circle containing the maximum amount of nodes we try to add it the circle with the lowest cost
+     * for each remaining node after we found the optimal path containing the maximum amount of nodes we try to add it the path with the lowest cost
      * if the node was added filter the remaining cities because it might have added other cities during that trip, continue until no cities left
      */
     public List<NodeData> tsp(List<NodeData> cities) {
-        List<List<NodeData>> paths = new ArrayList<>();
-        HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
-        List<NodeData> bestCircle = getShortestMaxCircle(cities);
-        clearVisitedCities(bestCircle, cities);
+        List<NodeData> bestPath = getOptimalPathFromList(cities);
+        clearVisitedCities(bestPath, cities);
+        while (!cities.isEmpty()) {
+            List<NodeData> optimalPathFromLast = getOptimalPathFromLast(bestPath.get(bestPath.size() - 1), cities);
+            if (optimalPathFromLast == null) {
+                break;
+            } else {
+                bestPath.addAll(optimalPathFromLast);
+            }
+            clearVisitedCities(bestPath, cities);
+        }
 
-        return null;
+        return bestPath;
     }
 
     private void clearVisitedCities(List<NodeData> bestCircle, List<NodeData> cities) {
@@ -273,7 +278,29 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
     }
 
-    public List<NodeData> getShortestMaxCircle(List<NodeData> cities) {
+    private List<NodeData> getOptimalPathFromLast(NodeData lastNode, List<NodeData> cities) {
+        HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
+        Iterator<NodeData> cityIter = cities.iterator();
+        int firstNodeId = lastNode.getKey();
+
+        while (cityIter.hasNext()) {
+            int destNodeId = cityIter.next().getKey();
+            List<NodeData> firstDirection = shortestPath(firstNodeId, destNodeId);
+            pathMap.put(firstDirection, dist[destNodeId]);
+        }
+
+        List<NodeData> optimalPath = getOptimalPathFromMap(cities, pathMap);
+        if (optimalPath == null) {
+            return null;
+        } else {
+            optimalPath.remove(0);
+            return optimalPath;
+        }
+
+    }
+
+
+    public List<NodeData> getOptimalPathFromList(List<NodeData> cities) {
         HashMap<List<NodeData>, Double> pathMap = new HashMap<>();
 
         for (int i = 0; i < cities.size(); i++) {
@@ -282,38 +309,34 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                 int secondNodeId = cities.get(j).getKey();
                 if (firstNodeId != secondNodeId) {
                     double pathCost = 0;
-                    List<NodeData> firstDirection = shortestPath(firstNodeId, secondNodeId);
+                    List<NodeData> shortestPath = shortestPath(firstNodeId, secondNodeId);
                     pathCost += dist[secondNodeId];
-                    List<NodeData> secondDirection = shortestPath(secondNodeId, firstNodeId);
-                    pathCost += dist[firstNodeId];
-                    firstDirection.remove(firstDirection.size() - 1);
-                    List<NodeData> joinedPath = Stream.of(firstDirection, secondDirection)
-                            .flatMap(x -> x.stream())
-                            .collect(Collectors.toList());
-
-                    pathMap.put(joinedPath, pathCost);
+                    pathMap.put(shortestPath, pathCost);
                 }
             }
         }
 
+        return getOptimalPathFromMap(cities, pathMap);
+    }
+
+    private List<NodeData> getOptimalPathFromMap(List<NodeData> cities, HashMap<List<NodeData>, Double> pathMap) {
         int maxParticipants = 0;
-        List<NodeData> bestCircle = null;
-        for (List<NodeData> circle : pathMap.keySet()) {
+        List<NodeData> bestMatchPath = null;
+        for (List<NodeData> path : pathMap.keySet()) {
             HashSet<Integer> currParticipants = new HashSet<>();
             for (NodeData city : cities) {
-                if (circle.contains(city)) {
+                if (path.contains(city)) {
                     currParticipants.add(city.getKey());
                 }
             }
             if (currParticipants.size() > maxParticipants) {
-                bestCircle = circle;
+                bestMatchPath = path;
                 maxParticipants = currParticipants.size();
-            } else if (currParticipants.size() == maxParticipants && bestCircle != null && pathMap.get(circle) < pathMap.get(bestCircle)) {
-                bestCircle = circle;
+            } else if (currParticipants.size() == maxParticipants && bestMatchPath != null && pathMap.get(path) < pathMap.get(bestMatchPath)) {
+                bestMatchPath = path;
             }
         }
-
-        return bestCircle;
+        return bestMatchPath;
     }
 
     @Override
