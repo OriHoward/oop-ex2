@@ -1,3 +1,4 @@
+import algos.DirectedGraph;
 import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraph;
 import api.NodeData;
@@ -98,5 +99,16 @@ class DirectedGraphAlgorithmsTest {
         algos.load("dataTests/isConnected.json");
         DirectedWeightedGraph copyGraph = algos.copy();
         copyGraph.connect(0,1,1.7);
+    }
+
+    @Test
+    void initTest(){
+        DirectedGraph graph = new DirectedGraph();
+        graph.loadGraph("dataTests/notConnected.json");
+        DirectedGraphAlgorithms algos = new DirectedGraphAlgorithms();
+        algos.load("dataTests/isConnected.json");
+        assertTrue(algos.isConnected());
+        algos.init(graph);
+        assertFalse(algos.isConnected());
     }
 }

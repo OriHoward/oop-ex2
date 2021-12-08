@@ -35,6 +35,27 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         dist = new Double[g.nodeSize()];
         prev = new ArrayList[g.nodeSize()];
 
+        DirectedGraph newGraph = (DirectedGraph) g;
+        HashMap<Integer, NodeData> newGraphNodeMap = newGraph.getNodeMap();
+
+        Iterator<NodeData> nodeIter = g.nodeIter();
+        while (nodeIter.hasNext()) {
+            NodeData currNode = nodeIter.next();
+            currNode.setTag(NodeTagEnum.WHITE.getValue());
+            newGraphNodeMap.put(currNode.getKey(), currNode);
+        }
+        Iterator<EdgeData> edgeDataIterator = g.edgeIter();
+        List<EdgeData> parsedEdges = new ArrayList<>();
+        edgeDataIterator.forEachRemaining(parsedEdges::add);
+        newGraph.setParsedEdges(parsedEdges);
+        newGraph.initiateEdgeMaps();
+        this.currGraph = newGraph;
+
+    }
+
+    private void resetGraphVars(DirectedWeightedGraph g) {
+        dist = new Double[g.nodeSize()];
+        prev = new ArrayList[g.nodeSize()];
         Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currNode = nodeIter.next();
@@ -66,21 +87,21 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
             return false;
         }
         HashSet<Integer> scannedNodes = new HashSet<>();
-        NodeData firstNode = graphCopy.nodeMap.get(0);
+        NodeData firstNode = graphCopy.getNodeMap().get(0);
         dfsTraversal(graphCopy, firstNode, scannedNodes);
 
-        if (scannedNodes.size() != graphCopy.nodeMap.size()) {
+        if (scannedNodes.size() != graphCopy.getNodeMap().size()) {
             return false;
         }
 
         scannedNodes.clear();
-        init(graphCopy);
+        resetGraphVars(graphCopy);
 
         //dfs traversal on the reversed graph
         graphCopy.initiateEdgeMaps();
         dfsTraversal(graphCopy, firstNode, scannedNodes);
 
-        if (scannedNodes.size() != graphCopy.nodeMap.size()) {
+        if (scannedNodes.size() != graphCopy.getNodeMap().size()) {
             return false;
         }
 
@@ -127,12 +148,12 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
         dijkstra(src);
         List<NodeData> fullPath = prev[dest];
-        fullPath.add(this.currGraph.nodeMap.get(dest));
+        fullPath.add(this.currGraph.getNodeMap().get(dest));
         return fullPath;
     }
 
     public void dijkstra(int src) {
-        init(currGraph);
+        resetGraphVars(currGraph);
         dist[src] = 0.0;
         Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
@@ -305,7 +326,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                     .registerTypeAdapter(GraphNode.class, posSerializer)
                     .setPrettyPrinting()
                     .create();
-            JsonArray nodeArray = gsonBuilder.toJsonTree(currGraph.nodeMap.values()).getAsJsonArray();
+            JsonArray nodeArray = gsonBuilder.toJsonTree(currGraph.getNodeMap().values()).getAsJsonArray();
             JsonArray edgeArray = gsonBuilder.toJsonTree(currGraph.getParsedEdges()).getAsJsonArray();
             JsonObject jsonObj = new JsonObject();
             jsonObj.add("Edges", edgeArray);
@@ -326,7 +347,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         if (isLoaded) {
             currGraph = g;
         }
-        init(g);
+        resetGraphVars(g);
         return isLoaded;
     }
 }

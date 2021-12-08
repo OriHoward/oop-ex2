@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     private int MCount;
-    HashMap<Integer, NodeData> nodeMap;
+    private HashMap<Integer, NodeData> nodeMap;
     List<EdgeData> parsedEdges;
 
     public DirectedGraph() {
@@ -35,6 +35,10 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
 
     public void setParsedEdges(List<EdgeData> parsedEdges) {
         this.parsedEdges = parsedEdges;
+    }
+
+    public HashMap<Integer, NodeData> getNodeMap() {
+        return nodeMap;
     }
 
     @Override
@@ -76,7 +80,7 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         //we need to check if that is a new node, or it overrides an existing one
         if (oldEdge == null) {
             parsedEdges.add(edge);
-        }else{
+        } else {
             parsedEdges.remove(oldEdge);
             parsedEdges.add(edge);
         }
