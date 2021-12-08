@@ -74,8 +74,23 @@ class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
     - List<NodeData> getOptimalPathFromMap(List<NodeData> cities, HashMap<List<NodeData>, Double> pathMap)
 }
 
-class GraphEdge implements EdgeData, Serializable {
+interface EdgeData{
+    + int getSrc()
+    + int getDest()
+    + double getWeight()
+    + String getInfo()
+    + void setInfo(String s)
+    + int getTag()
+    + void setTag(int t)
+}
 
+class GraphEdge implements EdgeData, Serializable {
+    - int source;
+    - double weight;
+    - int dest;
+    + void setSource(int source)
+    + void setDest(int dest)
+    + GraphEdge(int source, int dest, double weight)
 }
 
 class GraphNode implements NodeData, Serializable {

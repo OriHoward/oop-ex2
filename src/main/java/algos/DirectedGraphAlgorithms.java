@@ -257,6 +257,17 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
      * if the node was added filter the remaining cities because it might have added other cities during that trip, continue until no cities left
      */
     public List<NodeData> tsp(List<NodeData> cities) {
+        if (cities == null) {
+            return null;
+        }
+
+        if (cities.size() == 1) {
+            return cities;
+        }
+
+        HashSet<NodeData> citiesWithoutDups = new HashSet<>(cities);
+        cities = new ArrayList<>(citiesWithoutDups);
+
         List<NodeData> bestPath = getOptimalPathFromList(cities);
         clearVisitedCities(bestPath, cities);
         while (!cities.isEmpty()) {
