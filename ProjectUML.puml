@@ -93,21 +93,77 @@ class GraphEdge implements EdgeData, Serializable {
     + GraphEdge(int source, int dest, double weight)
 }
 
+interface NodeData {
+    + int getKey()
+    + GeoLocation getLocation()
+    + void setLocation(GeoLocation p)
+    + double getWeight()
+    + void setWeight(double w)
+    + String getInfo()
+    + void setInfo(String s)
+    + int getTag()
+    + void setTag(int t)
+}
+
 class GraphNode implements NodeData, Serializable {
 
+    - GeoLocation pos
+    - int id
+    - double weight
+    - HashMap<Integer, EdgeData> destMap
+    - HashMap<Integer, EdgeData> sourceMap
+    - NodeTagEnum tag
+
+    + HashMap<Integer, EdgeData> getDestMap()
+    + HashMap<Integer, EdgeData> getSourceMap()
+    + void addDest(EdgeData edge)
+    + void setSourceMap(HashMap<Integer, EdgeData> sourceMap)
+    + void setDestMap(HashMap<Integer, EdgeData> destMap)
+    + void addSrc(EdgeData edge)
+    + EdgeData removeDest(int dest)
+    + EdgeData removeSrc(int source)
+
+}
+
+interface GeoLocation {
+
+    + double x()
+    + double y()
+    + double z()
+    + double distance(GeoLocation g)
 }
 
 class NodeLocation implements GeoLocation, Serializable {
 
+    - double x
+    - double y
+    - double z
+
 }
 
 class PosSerializer implements JsonSerializer {
+    + JsonElement serialize(NodeData nodeData, Type type, JsonSerializationContext jsonSerializationContext)
 }
 
 enum NodeTagEnum {
-WHITE
-GRAY
-BLACK
+    WHITE
+    GRAY
+    BLACK
+    - final int value
+    - NodeTagEnum(int value)
+    + int getValue()
+}
+
+class DecoratedGraphIterator implements Iterator{
+    - DirectedGraph graph
+    - int currIndex
+    - int MCount
+    - Iterator<T> graphIter
+
+    + boolean hasNext()
+    + T next()
+    + void remove()
+    + void forEachRemaining(Consumer<? super T> action)
 }
 
 
