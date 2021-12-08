@@ -16,6 +16,19 @@ interface DirectedWeightedGraph{
     + int getMC();
 }
 
+interface DirectedWeightedGraphAlgorithms{
+
+    + void init(DirectedWeightedGraph g)
+    + DirectedWeightedGraph getGraph()
+    + DirectedWeightedGraph copy()
+    + boolean isConnected()
+    + double shortestPathDist(int src, int dest)
+    + List<NodeData> shortestPath(int src, int dest)
+    + NodeData center()
+    + boolean save(String file)
+    + boolean load(String file)
+}
+
 class DecoratedGraphIterator implements Iterator{
     - DirectedGraph graph
     - int currIndex
@@ -44,7 +57,21 @@ class DirectedGraph implements DirectedWeightedGraph, Serializable {
 }
 
 class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
+    - DirectedGraph currGraph
+    - Double[] dist
+    - List<NodeData>[] prev
+    - Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2)
 
+    + Double[] getDist()
+    + void dijkstra(int src)
+    + void dijkstraMinimize(int src)
+    + boolean isConnectedDFS()
+    - void dfsTraversal(DirectedGraph graph, NodeData currNode, HashSet<Integer> scannedNodes)
+    - int findMax()
+    - void clearVisitedCities(List<NodeData> bestCircle, List<NodeData> cities)
+    - List<NodeData> getOptimalPathFromLast(NodeData lastNode, List<NodeData> cities)
+    - List<NodeData> getOptimalPathFromList(List<NodeData> cities)
+    - List<NodeData> getOptimalPathFromMap(List<NodeData> cities, HashMap<List<NodeData>, Double> pathMap)
 }
 
 class GraphEdge implements EdgeData, Serializable {
