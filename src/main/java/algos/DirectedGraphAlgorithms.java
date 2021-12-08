@@ -257,7 +257,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
      * if the node was added filter the remaining cities because it might have added other cities during that trip, continue until no cities left
      */
     public List<NodeData> tsp(List<NodeData> cities) {
-        if (cities == null) {
+        if (cities == null || cities.size() ==0) {
             return null;
         }
 
