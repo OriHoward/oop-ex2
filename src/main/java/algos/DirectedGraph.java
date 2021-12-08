@@ -21,24 +21,12 @@ import java.util.List;
 public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     private int MCount;
     private HashMap<Integer, NodeData> nodeMap;
-    List<EdgeData> parsedEdges;
+    private List<EdgeData> parsedEdges;
 
     public DirectedGraph() {
         this.MCount = 0;
         this.nodeMap = new HashMap<>();
         parsedEdges = new ArrayList<>();
-    }
-
-    public void setNodeMap(HashMap<Integer, NodeData> nodeMap) {
-        this.nodeMap = nodeMap;
-    }
-
-    public void setParsedEdges(List<EdgeData> parsedEdges) {
-        this.parsedEdges = parsedEdges;
-    }
-
-    public HashMap<Integer, NodeData> getNodeMap() {
-        return nodeMap;
     }
 
     @Override
@@ -87,12 +75,6 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         srcNode.addDest(edge);
         destNode.addSrc(edge);
         MCount++;
-    }
-
-    public void hasChanged(int givenMCount) {
-        if (givenMCount != this.MCount) {
-            throw new RuntimeException("Changes where performed during iteration");
-        }
     }
 
     @Override
@@ -163,6 +145,20 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     @Override
     public int getMC() {
         return MCount;
+    }
+
+    public void setParsedEdges(List<EdgeData> parsedEdges) {
+        this.parsedEdges = parsedEdges;
+    }
+
+    public HashMap<Integer, NodeData> getNodeMap() {
+        return nodeMap;
+    }
+
+    public void hasChanged(int givenMCount) {
+        if (givenMCount != this.MCount) {
+            throw new RuntimeException("Changes where performed during iteration");
+        }
     }
 
     public boolean loadGraph(String filename) {

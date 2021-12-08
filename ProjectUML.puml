@@ -1,6 +1,20 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+interface DirectedWeightedGraph{
+    + NodeData getNode(int key);
+    + EdgeData getEdge(int src, int dest);
+    + void addNode(NodeData n);
+    + void connect(int src, int dest, double w);
+    + Iterator<NodeData> nodeIter();
+    + Iterator<EdgeData> edgeIter();
+    + Iterator<EdgeData> edgeIter(int node_id);
+    + NodeData removeNode(int key);
+    + EdgeData removeEdge(int src, int dest);
+    + int nodeSize();
+    + int edgeSize();
+    + int getMC();
+}
 
 class DecoratedGraphIterator implements Iterator{
     - DirectedGraph graph
@@ -16,6 +30,16 @@ class DecoratedGraphIterator implements Iterator{
 }
 
 class DirectedGraph implements DirectedWeightedGraph, Serializable {
+
+    - int MCount
+    - HashMap<Integer, NodeData> nodeMap
+    - List<EdgeData> parsedEdges
+
+    + void setParsedEdges(List<EdgeData> parsedEdges)
+    + HashMap<Integer, NodeData> getNodeMap()
+    + void hasChanged(int givenMCount)
+    + boolean loadGraph(String filename)
+    + void initiateEdgeMaps()
 
 }
 
