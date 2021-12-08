@@ -1,11 +1,14 @@
 package GUI;
 
 import algos.DirectedGraphAlgorithms;
+import algos.GraphNode;
+import algos.NodeLocation;
 import api.NodeData;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -66,6 +70,7 @@ public class GraphGUI extends Application {
         MenuItem center = new MenuItem("center");
         MenuItem tsp = new MenuItem("tsp");
         Button clean = new Button("clean");
+
         clean.setOnAction(actionEvent -> {
             for (int i = 0; i < nodeList.size(); i++) {
                 Button currButton = nodeList.get(i);
@@ -119,12 +124,75 @@ public class GraphGUI extends Application {
 
         //todo option to choose where to save.
         save.setOnAction(actionEvent -> {
-            savePopWindow(algos.save("myGraph"));
+//            DirectoryChooser directoryChooser = new DirectoryChooser();
+//            File directory = directoryChooser.showDialog(primaryStage);
+            FileChooser saveFileChooser = new FileChooser();
+            File saveFile = saveFileChooser.showOpenDialog(primaryStage);
+            if (saveFile != null) {
+
+                String path = saveFile.getAbsolutePath();
+                savePopWindow(algos.save(path));
+            }
         });
         exit.setOnAction(e -> Platform.exit());
 
 
+
+
         // run Algorithms options:
+        addNode.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            Label valueX = new Label("enter coordinate of X in range: 0 - " + WIDTH);
+            Label valueY = new Label("enter coordinate of Y in range: 0 - " + HEIGHT);
+            Label id = new Label("enter node ID in range: 0 - " + algos.getGraph().nodeSize());
+            TextField textFieldX = new TextField();
+            TextField textFieldY = new TextField();
+            TextField textFieldId = new TextField();
+
+            Button button = new Button("ENTER");
+            button.setOnAction(e -> {
+                if (isDouble(textFieldX.getText(),textFieldY.getText()) && isInt(textFieldId)) {
+                    double x = Double.parseDouble(textFieldX.getText());
+                    double y = Double.parseDouble(textFieldY.getText());
+                    int nodeId = Integer.parseInt(textFieldId.getText());
+                    if (x > WIDTH || x< 0 || y> HEIGHT || y<0 || nodeId <0 || nodeId > algos.getGraph().nodeSize()) {
+                        nodeErrorPopUp();
+                    }
+                    else{
+                        GraphNode newNode = new GraphNode(new NodeLocation(x,y,0),nodeId);
+                        algos.getGraph().addNode(newNode);
+                        primaryStage.close();
+                        try {
+                            start(primaryStage);
+                        } catch (Exception exep) {
+                            exep.printStackTrace();
+                        }
+
+                    }
+                }
+            });
+            VBox layout = new VBox(10);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll(valueX, textFieldX, valueY, textFieldY, id,textFieldId,button);
+
+            Scene sc = new Scene(layout, 300, 300);
+            stage.setScene(sc);
+            stage.show();
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
         isConnected.setOnAction(actionEvent -> {
             isConnectedPopWindow(algos.isConnected());
         });
@@ -204,7 +272,6 @@ public class GraphGUI extends Application {
                 List<NodeData> result = algos.tsp(addedNodes);
                 paintTrail(result);
             });
-
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
             layout.getChildren().addAll(label, userInput, button, runAlgo, labelAdded);
@@ -213,14 +280,62 @@ public class GraphGUI extends Application {
             stage.setScene(sc);
             stage.show();
         });
+    }
 
+    private void nodeErrorPopUp() {
+        Stage stage = new Stage();
+        Label label = new Label("Error - please enter numbers in range" );
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(label);
+
+        Scene sc = new Scene(layout, 300, 300);
+        stage.setScene(sc);
+        stage.show();
+    }
+    private boolean isDouble(String valueX, String valueY) {
+        try {
+            Double.parseDouble(valueX);
+            Double.parseDouble(valueY);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
 
     }
+
+//    private void addChosenNode() {
+//        Stage popWindow = new Stage();
+//        Label label;
+//        if (isInt(sourceInput, destInput)) {
+//            int src = Integer.parseInt(sourceInput.getText());
+//            int dest = Integer.parseInt(destInput.getText());
+//            if (src > maxNum || dest > maxNum || src < 0 || dest < 0) {
+//                label = new Label("please enter numbers in range");
+//            } else {
+//                sourceInput.clear();
+//                destInput.clear();
+//                label = new Label("shortest distance: " + algos.shortestPathDist(src, dest));
+//            }
+//        } else {
+//            label = new Label("Please enter numbers only");
+//        }
+//        popWindow.initModality(Modality.APPLICATION_MODAL);
+//        Button button = new Button("close");
+//        button.setOnAction(e -> popWindow.close());
+//        VBox layout = new VBox(10);
+//        layout.getChildren().addAll(label, button);
+//        layout.setAlignment(Pos.CENTER);
+//        Scene popScene = new Scene(layout, 450, 400);
+//        popWindow.setScene(popScene);
+//        popWindow.showAndWait();
+//    }
 
     private void paintTrail(List<NodeData> result) {
         Stage popWindow = new Stage();
         Label label;
-        if (result == null) {
+        if (result == null || result.size() == 0) {
             label = new Label("There is no path going through all nodes");
         } else {
             for (int i = 0; i < result.size(); i++) {
@@ -265,6 +380,16 @@ public class GraphGUI extends Application {
                 sourceInput.clear();
                 destInput.clear();
                 List<NodeData> trail = algos.shortestPath(src, dest);
+                for (int i = 0; i < trail.size(); i++) {
+                    int nodeKey = trail.get(i).getKey();
+                    Button currNode = nodeList.get(nodeKey);
+                    currNode.setStyle(" -fx-background-color: black;" +
+                            "-fx-background-radius: 8em; " +
+                            "-fx-min-width: 20px; " +
+                            "-fx-min-height: 20px; " +
+                            "-fx-max-width: 20px; " +
+                            "-fx-max-height: 20px;");
+                }
                 StringBuilder prev = new StringBuilder();
                 prev.append("Fastest path: ");
                 for (int i = 0; i < trail.size() - 1; i++) {
