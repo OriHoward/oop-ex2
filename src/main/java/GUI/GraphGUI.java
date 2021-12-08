@@ -1,6 +1,7 @@
 package GUI;
 
 import algos.DirectedGraphAlgorithms;
+import api.NodeData;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,10 +18,10 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import static javafx.scene.paint.Color.GREEN;
 
@@ -44,26 +45,38 @@ public class GraphGUI extends Application {
         MenuItem save = new MenuItem("Save");
         MenuItem exit = new MenuItem("Exit");
 
+        MenuButton edit = new MenuButton("Edit");
+        Menu nodes = new Menu("Nodes");
+        Menu edges = new Menu("Edges");
+
+        MenuItem addNode = new MenuItem("addNode");
+        MenuItem removeNode = new MenuItem("removeNode");
+        MenuItem addEdge = new MenuItem("addEdge");
+        MenuItem removeEdge = new MenuItem("removeEdge");
+        nodes.getItems().addAll(addNode, removeNode);
+        edges.getItems().addAll(addEdge, removeEdge);
+        edit.getItems().addAll(nodes, edges);
+        edit.setLayoutX(50);
+
         MenuButton run = new MenuButton("RunAlgorithm");
         MenuItem isConnected = new MenuItem("isConnected");
         MenuItem shortestPathDist = new MenuItem("shortestPathDist");
         MenuItem shortestPath = new MenuItem("shortestPath");
         MenuItem center = new MenuItem("center");
         MenuItem tsp = new MenuItem("tsp");
-        run.setLayoutX(50);
-
+        run.setLayoutX(102);
 
         run.getItems().addAll(isConnected, shortestPathDist, shortestPath, center, tsp);
         file.getItems().addAll(load, save, exit);
         Text text = new Text(10, 10, "click on each node to find more info");
         text.setFont(new Font(40));
         text.setFill(GREEN);
-        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 30));
-        text.setY(50);
-        text.setX(50);
+        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 18));
+        text.setX(30);
+        text.setY(60);
         text.setVisible(true);
 
-        Group group = new Group(root, text, file, run);
+        Group group = new Group(root, text, file, edit, run);
 
         AnimationTimer tm = new MyTimer(algos, root, radius, nodeList, WIDTH, HEIGHT);
         tm.start();
@@ -102,13 +115,20 @@ public class GraphGUI extends Application {
 
         shortestPath.setOnAction(actionEvent -> {
             Stage stage = new Stage();
-            TextField userInput = new TextField("enter source and press OK ");
-            Button ok = new Button("OK");
-            ok.setOnAction(e -> isInt(userInput,userInput.getText()));
+            Label source = new Label("enter source between: 0 - " + (algos.getGraph().nodeSize() -1));
+            Label dest = new Label("enter dest between: 0 - " + (algos.getGraph().nodeSize() -1));
+            TextField sourceInput = new TextField();
+            TextField destInput = new TextField();
+            Button button = new Button("ENTER");
+            button.setOnAction(e -> {
+                checkInput(algos.getGraph().nodeSize(),sourceInput,destInput);
+            });
+
             VBox layout = new VBox(10);
-            layout.setPadding(new Insets(20,20,20,20));
-            layout.getChildren().addAll(userInput,ok);
-            Scene sc = new Scene(layout,300,300);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll(source, sourceInput, dest, destInput, button);
+
+            Scene sc = new Scene(layout, 300, 300);
             stage.setScene(sc);
             stage.show();
         });
@@ -116,23 +136,48 @@ public class GraphGUI extends Application {
 
     }
 
-    private void isInt(TextField userInput, String number) {
+    private Boolean isInt(TextField sourceInput, TextField destInput) {
         try {
-            int num = Integer.parseInt(number);
-            userInput.clear();
-            userInput.setStyle(".text-field.error {\n" +
-                    "  -fx-text-box-border: green ;\n" +
-                    "  -fx-focus-color: green ;\n" +
-                    "}");
-            System.out.println("num is:" + number);
-        }catch (NumberFormatException e) {
-            userInput.setStyle(".text-field.error {\n" +
-                    "  -fx-text-box-border: red ;\n" +
-                    "  -fx-focus-color: red ;\n" +
-                    "}");
-
-            System.out.println("ERROR");
+            Integer.parseInt(sourceInput.getText());
+            Integer.parseInt(destInput.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
+    }
+
+    private void checkInput(int maxNum, TextField sourceInput, TextField destInput) {
+        Stage popWindow = new Stage();
+        Label label;
+        if (isInt(sourceInput, destInput)) {
+            int src = Integer.parseInt(sourceInput.getText());
+            int dest = Integer.parseInt(destInput.getText());
+            if (src > maxNum || dest > maxNum || src < 0 || dest < 0) {
+                label = new Label("please enter numbers in range");
+            } else {
+                sourceInput.clear();
+                destInput.clear();
+                List<NodeData> trail = algos.shortestPath(src,dest);
+                StringBuilder prev = new StringBuilder();
+                prev.append("Fastest path: ");
+                for (int i = 0; i < trail.size() -1; i++) {
+                    prev.append(trail.get(i).getKey()).append("-> ");
+                }
+                prev.append(trail.get(trail.size() -1).getKey());
+                label = new Label(prev.toString());
+            }
+        } else {
+            label = new Label("Please enter numbers only");
+        }
+        popWindow.initModality(Modality.APPLICATION_MODAL);
+        Button button = new Button("close");
+        button.setOnAction(e -> popWindow.close());
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, button);
+        layout.setAlignment(Pos.CENTER);
+        Scene popScene = new Scene(layout, 450, 400);
+        popWindow.setScene(popScene);
+        popWindow.showAndWait();
     }
 
     private void savePopWindow(Boolean isSaved) {
@@ -141,8 +186,7 @@ public class GraphGUI extends Application {
         Label label;
         if (isSaved) {
             label = new Label("Graph saved successfully!");
-        }
-        else {
+        } else {
             label = new Label("could not save graph");
         }
         Button button = new Button("close");
