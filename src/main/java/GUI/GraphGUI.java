@@ -32,7 +32,7 @@ public class GraphGUI extends Application {
     final int WIDTH = 1080;
     final int HEIGHT = 800;
     static DirectedGraphAlgorithms algos;
-    HashMap<Integer,Button> nodeMap = new HashMap<>();
+    HashMap<Integer, Button> nodeMap = new HashMap<>();
     Pane root;
     double radius = 10;
     DirectedWeightedGraph originalGraphCopy = algos.copy();
@@ -148,20 +148,20 @@ public class GraphGUI extends Application {
             TextField textFieldDest = new TextField();
             Button removeButton = new Button("RemoveEdge");
             removeButton.setOnAction(actionEventRemove -> {
-                if (isInt(textFieldSrc,textFieldDest)) {
+                if (isInt(textFieldSrc, textFieldDest)) {
                     int src = Integer.parseInt(textFieldSrc.getText());
                     int dest = Integer.parseInt(textFieldDest.getText());
-                    if (src < 0 || src > algos.getGraph().nodeSize() || dest <0 || dest>algos.getGraph().nodeSize()) {
+                    if (src < 0 || src > algos.getGraph().nodeSize() || dest < 0 || dest > algos.getGraph().nodeSize()) {
                         errorPopUp();
                     } else {
-                        algos.getGraph().removeEdge(src,dest);
+                        algos.getGraph().removeEdge(src, dest);
                         updateGraph(primaryStage);
                     }
                 }
             });
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
-            layout.getChildren().addAll(srcEdge,textFieldSrc,destEdge,textFieldDest,removeButton);
+            layout.getChildren().addAll(srcEdge, textFieldSrc, destEdge, textFieldDest, removeButton);
             Scene sc = new Scene(layout, 600, 300);
             stage.setScene(sc);
             stage.show();
@@ -180,14 +180,14 @@ public class GraphGUI extends Application {
     private void removeNodeAction(Stage primaryStage, MenuItem removeNode) {
         removeNode.setOnAction(actionEvent -> {
             Stage stage = new Stage();
-            Label label = new Label("enter node ID in range: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label label = new Label("enter node ID: ");
             TextField textFieldId = new TextField();
 
             Button removeButton = new Button("Remove Node");
             removeButton.setOnAction(actionEventRemove -> {
                 if (isInt(textFieldId)) {
                     int nodeId = Integer.parseInt(textFieldId.getText());
-                    if (nodeId < 0 || nodeId > algos.getGraph().nodeSize()) {
+                    if (!nodeMap.containsKey(nodeId)) {
                         removedNodeErrorMessage();
                     } else {
                         NodeData removedNode = algos.getGraph().removeNode(nodeId);
@@ -203,8 +203,7 @@ public class GraphGUI extends Application {
 
     private void removedNodeErrorMessage() {
         Stage stage = new Stage();
-        Label label = new Label("please enter numbers in range");
-
+        Label label = new Label("Node Id does not exist");
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
         layout.getChildren().addAll(label);
@@ -339,13 +338,15 @@ public class GraphGUI extends Application {
         clean.setOnAction(actionEvent -> {
             for (int i = 0; i < nodeMap.size(); i++) {
                 Button currButton = nodeMap.get(i);
-                currButton.setStyle(
-                        "-fx-background-radius: 8em; " +
-                                "-fx-min-width: 20px; " +
-                                "-fx-min-height: 20px; " +
-                                "-fx-max-width: 20px; " +
-                                "-fx-max-height: 20px;"
-                );
+                if (currButton != null) {
+                    currButton.setStyle(
+                            "-fx-background-radius: 8em; " +
+                                    "-fx-min-width: 20px; " +
+                                    "-fx-min-height: 20px; " +
+                                    "-fx-max-width: 20px; " +
+                                    "-fx-max-height: 20px;"
+                    );
+                }
             }
         });
     }
