@@ -1,5 +1,11 @@
 # oop-ex2
 
+contributors:
+
+Eitan Kats
+Ori Howard
+
+
 We were given an assignment to create a graph visualizer which allows the user to run algorithms on the graph that we had to implement
 
 ![plot](./misc/Screen%20Shot%202021-12-09%20at%2018.02.21.png)
