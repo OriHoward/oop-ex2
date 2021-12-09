@@ -67,6 +67,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     }
 
     @Override
+    /**
+     * connect two nodes with an edge with a given weight src-->dest
+     */
     public void connect(int src, int dest, double w) {
         GraphNode srcNode = (GraphNode) nodeMap.get(src);
         GraphNode destNode = (GraphNode) nodeMap.get(dest);
@@ -102,6 +105,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
 
 
     @Override
+    /**
+     * removes a node and all the edges that are connected to it, edges that go out of it and edges that go into it
+     */
     public NodeData removeNode(int key) {
         GraphNode currNode = (GraphNode) this.nodeMap.get(key);
         if (currNode==null){
@@ -127,6 +133,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
 
 
     @Override
+    /**
+     * removes an edge that connect src-->dest if it exists
+     */
     public EdgeData removeEdge(int src, int dest) {
         GraphNode srcNode = (GraphNode) nodeMap.get(src);
         GraphNode destNode = (GraphNode) nodeMap.get(dest);
@@ -171,6 +180,11 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         }
     }
 
+    /**
+     * loads a json file representing the graph
+     * @param filename json file path
+     * @return true if load is successful
+     */
     public boolean loadGraph(String filename) {
         try {
             Gson gson = new Gson();
@@ -206,6 +220,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         }
     }
 
+    /**
+     * connects the parsed edges to the parsed nodes
+     */
     public void initiateEdgeMaps() {
         for (EdgeData edge : parsedEdges) {
             GraphNode srcNode = (GraphNode) this.nodeMap.get(edge.getSrc());
