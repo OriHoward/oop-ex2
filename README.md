@@ -1,8 +1,9 @@
 # oop-ex2
 
-contributors:
+Contributors:
 
 Eitan Kats
+
 Ori Howard
 
 
