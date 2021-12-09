@@ -100,14 +100,14 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         //remove this node from the dest mapping of each father
         currNode.getSourceMap().keySet().forEach(nodeKey -> {
             GraphNode currFather = (GraphNode) this.nodeMap.get(nodeKey);
-            EdgeData removedEdge = currFather.removeDest(currFather.getKey());
+            EdgeData removedEdge = currFather.removeDest(currNode.getKey());
             MCount++;
             parsedEdges.remove(removedEdge);
         });
         //remove this node from each source map of its children
         currNode.getDestMap().keySet().forEach(nodeKey -> {
             GraphNode currChild = (GraphNode) this.nodeMap.get(nodeKey);
-            EdgeData removedEdge = currChild.removeSrc(currChild.getKey());
+            EdgeData removedEdge = currChild.removeSrc(currNode.getKey());
             MCount++;
             parsedEdges.remove(removedEdge);
         });
