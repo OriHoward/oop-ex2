@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class MyTimer extends AnimationTimer {
@@ -22,18 +23,17 @@ public class MyTimer extends AnimationTimer {
     private double radius;
     private DirectedGraphAlgorithms algos;
     private Pane root;
-    ArrayList<Button> nodeList;
+    HashMap<Integer,Button> nodeList;
     private int width;
     private int height;
 
-    public MyTimer(DirectedGraphAlgorithms algos, Pane root,double radius,ArrayList<Button> nodeList,int width,int height) {
+    public MyTimer(DirectedGraphAlgorithms algos, Pane root,double radius,HashMap<Integer,Button> nodeList,int width,int height) {
         this.algos = algos;
         this.root = root;
         this.radius = radius;
         this.nodeList = nodeList;
         this.width = width;
         this.height = height;
-
     }
 
     @Override
@@ -155,7 +155,7 @@ public class MyTimer extends AnimationTimer {
             });
             start();
             this.root.getChildren().add(button);
-            this.nodeList.add(button);
+            this.nodeList.put(currNode.getKey(),button);
         }
         stop();
         try {

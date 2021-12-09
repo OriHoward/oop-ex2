@@ -24,10 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static javafx.scene.paint.Color.GREEN;
 
@@ -35,7 +32,7 @@ public class GraphGUI extends Application {
     final int WIDTH = 1080;
     final int HEIGHT = 800;
     static DirectedGraphAlgorithms algos;
-    ArrayList<Button> nodeList = new ArrayList<>();
+    HashMap<Integer,Button> nodeMap = new HashMap<>();
     Pane root;
     double radius = 10;
     DirectedWeightedGraph originalGraphCopy = algos.copy();
@@ -44,7 +41,7 @@ public class GraphGUI extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Graph");
         root = new Pane();
-        nodeList.clear();
+        nodeMap.clear();
 
         FileChooser fileChooser = new FileChooser();
         FileChooser saveFileChooser = new FileChooser();
@@ -58,15 +55,14 @@ public class GraphGUI extends Application {
         MenuButton edit = new MenuButton("Edit");
         Menu nodes = new Menu("Nodes");
         Menu edges = new Menu("Edges");
-        MenuItem connect = new MenuItem("connect");
 
         MenuItem addNode = new MenuItem("addNode");
         MenuItem removeNode = new MenuItem("removeNode");
-        MenuItem addEdge = new MenuItem("addEdge");
+        MenuItem connect = new MenuItem("connect");
         MenuItem removeEdge = new MenuItem("removeEdge");
         nodes.getItems().addAll(addNode, removeNode);
-        edges.getItems().addAll(addEdge, removeEdge);
-        edit.getItems().addAll(nodes, edges, connect);
+        edges.getItems().addAll(connect, removeEdge);
+        edit.getItems().addAll(nodes, edges);
 
 
         MenuButton run = new MenuButton("RunAlgorithm");
@@ -93,7 +89,7 @@ public class GraphGUI extends Application {
 
         Group group = new Group(root, toolBar, text);
 
-        AnimationTimer tm = new MyTimer(algos, root, radius, nodeList, WIDTH, HEIGHT);
+        AnimationTimer tm = new MyTimer(algos, root, radius, nodeMap, WIDTH, HEIGHT);
         tm.start();
         Scene scene = new Scene(group, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
@@ -120,6 +116,30 @@ public class GraphGUI extends Application {
         //edit graph options:
         addNodeAction(primaryStage, addNode);
         removeNodeAction(primaryStage, removeNode);
+        connect.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            Point2D minPoint = findMinPoint();
+            Point2D maxPoint = findMaxPoint();
+            Label valueX = new Label("enter coordinate of X in range: " + minPoint.getX() + " - " + maxPoint.getX());
+            Label valueY = new Label("enter coordinate of Y in range: " + minPoint.getY() + " - " + maxPoint.getY());
+            Label id = new Label("enter node ID in range: 0 - " + algos.getGraph().nodeSize());
+            TextField textFieldX = new TextField();
+            TextField textFieldY = new TextField();
+            TextField textFieldId = new TextField();
+
+            Button button = new Button("ENTER");
+            VBox layout = new VBox(10);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll();
+            Scene sc = new Scene(layout, 600, 300);
+            stage.setScene(sc);
+            stage.show();
+        });
+        removeEdgeAction(primaryStage, removeEdge);
+
+    }
+
+    private void removeEdgeAction(Stage primaryStage, MenuItem removeEdge) {
         removeEdge.setOnAction(actionEvent -> {
             Stage stage = new Stage();
             Label srcEdge = new Label("enter source in rage: 0 - " + (algos.getGraph().nodeSize() - 1));
@@ -170,8 +190,10 @@ public class GraphGUI extends Application {
                     if (nodeId < 0 || nodeId > algos.getGraph().nodeSize()) {
                         removedNodeErrorMessage();
                     } else {
-                        algos.getGraph().removeNode(nodeId);
-                        updateGraph(primaryStage);
+                        NodeData removedNode = algos.getGraph().removeNode(nodeId);
+                        if (removedNode != null) {
+                            updateGraph(primaryStage);
+                        }
                     }
                 }
             });
@@ -197,7 +219,7 @@ public class GraphGUI extends Application {
         center.setOnAction(actionEvent -> {
             NodeData nodeCenter = algos.center();
             int nodeCenterNum = nodeCenter.getKey();
-            Button button = nodeList.get(nodeCenterNum);
+            Button button = nodeMap.get(nodeCenterNum);
             button.setStyle(" -fx-background-color: black;" +
                     "-fx-background-radius: 8em; " +
                     "-fx-min-width: 20px; " +
@@ -315,8 +337,8 @@ public class GraphGUI extends Application {
 
     private void cleanAction(Button clean) {
         clean.setOnAction(actionEvent -> {
-            for (int i = 0; i < nodeList.size(); i++) {
-                Button currButton = nodeList.get(i);
+            for (int i = 0; i < nodeMap.size(); i++) {
+                Button currButton = nodeMap.get(i);
                 currButton.setStyle(
                         "-fx-background-radius: 8em; " +
                                 "-fx-min-width: 20px; " +
@@ -434,7 +456,7 @@ public class GraphGUI extends Application {
         } else {
             for (int i = 0; i < result.size(); i++) {
                 int nodeKey = result.get(i).getKey();
-                Button currNode = nodeList.get(nodeKey);
+                Button currNode = nodeMap.get(nodeKey);
                 currNode.setStyle(" -fx-background-color: black;" +
                         "-fx-background-radius: 8em; " +
                         "-fx-min-width: 20px; " +
@@ -476,7 +498,7 @@ public class GraphGUI extends Application {
                 destInput.clear();
                 for (int i = 0; i < trail.size(); i++) {
                     int nodeKey = trail.get(i).getKey();
-                    Button currNode = nodeList.get(nodeKey);
+                    Button currNode = nodeMap.get(nodeKey);
                     currNode.setStyle(" -fx-background-color: black;" +
                             "-fx-background-radius: 8em; " +
                             "-fx-min-width: 20px; " +
