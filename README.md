@@ -31,8 +31,7 @@ Each edge comprises the following:
 The following algorithms were the core of the project:
 
 * Dijkstra - We have implemented the Dijkstra algorithm with the minimum heap
-* DFS - When we check whether the graph is connected we use two iterations of DFS, the first one on the original graph which inverses the graph and a 2nd one on the inversed graph
-* tsp - This function is a variation of the [Travelling_salesman_problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) where had to find the optimal path which passes through a list of given nodes
+* DFS - When we check whether the graph is connected we use two iterations of DFS, the first one on the original graph which inverses the graph and a 2nd one on the inverse graph
 
 ## Class overview
 
