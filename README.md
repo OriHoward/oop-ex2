@@ -143,10 +143,9 @@ A serializer class used to write the data to a json file
 * isConnected: 1.3 sec
 
 ### Scenario 3 (100K nodes):
-* center: 3.2 sec
-* isConnected: 230ms
+* center: a few hours
+* isConnected: 19.7s
 
-### Scenario 3 (1M nodes):
+### Scenario 4 (1M nodes):
+generating the graph resulted in out of memory.
 
-* center: 3.2 sec
-* isConnected: 230ms
