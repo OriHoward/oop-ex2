@@ -135,22 +135,16 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        if (checkRange(src,dest)){
-            dijkstra(src);
-            return dist[dest];
+        if (currGraph.getNodeMap().get(src)== null || currGraph.getNodeMap().get(dest) == null) {
+            return Integer.MAX_VALUE;
         }
-        return -1;
-    }
-    private boolean checkRange(int src, int dest) {
-        if (src<0 || dest <0 || src>currGraph.nodeSize()-1 || dest> currGraph.nodeSize()-1) {
-            return false;
-        }
-        return true;
+        dijkstra(src);
+        return dist[dest];
     }
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        if (src == dest || checkRange(src,dest)) {
+        if (src == dest || currGraph.getNodeMap().get(src) == null || currGraph.getNodeMap().get(dest) == null) {
             return null;
         }
         dijkstra(src);
@@ -266,7 +260,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
      * if the node was added filter the remaining cities because it might have added other cities during that trip, continue until no cities left
      */
     public List<NodeData> tsp(List<NodeData> cities) {
-        if (cities == null || cities.size() ==0) {
+        if (cities == null || cities.size() == 0) {
             return null;
         }
 
