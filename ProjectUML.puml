@@ -45,8 +45,8 @@ class DirectedGraph implements DirectedWeightedGraph, Serializable {
 
 class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
     - DirectedGraph currGraph
-    - Double[] dist
-    - List<NodeData>[] prev
+    - HashMap<Integer, Double> dist
+    - HashMap<Integer, List<NodeData>> prev
     - Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2)
 
     + Double[] getDist()
@@ -152,6 +152,48 @@ class DecoratedGraphIterator implements Iterator{
     + void remove()
     + void forEachRemaining(Consumer<? super T> action)
 }
+
+class GraphGui implements Application {
+    final int WIDTH
+    fina int HEIGHT
+    static DirectedGraphAlgorithms algos
+    HashMap<Integer, Button> nodeMap
+    Pane root
+    Double radius
+    DirectedWeightedGraph originalGraphCopy
+
+    + void start(Stage primaryStage)
+    - void connectAction(Stage primaryStage, MenuItem connect)
+    - void removeEdgeAction(Stage primaryStage, MenuItem removeEdge)
+    - void popWindow(Stage stage, Label label, TextField textFieldId, Button removeButton)
+    - void removeNodeAction(Stage primaryStage, MenuItem removeNode)
+    - void removedNodeErrorMessage()
+    - void removedNodeErrorMessage()
+    - shortestPathDistAction(MenuItem shortestPathDist)
+    - void shortestPathAction(MenuItem shortestPath)
+    - void addNodeAction(Stage primaryStage, MenuItem addNode)
+    - void updateGraph(Stage primaryStage)
+    - void saveAction(Stage primaryStage, FileChooser fileChooser, FileChooser saveFileChooser, MenuItem save)
+    - void resetAction(Stage primaryStage, Button reset)
+    - void cleanAction(Button clean)
+    - void loadAction(Stage primaryStage, FileChooser fileChooser, MenuItem load)
+    - void tspAction(MenuItem tsp)
+    - Point2D findMinPoint()
+    - Point2D findMaxPoint()
+    - void errorPopUp()
+    - boolean isDouble(String valueX, String valueY)
+    - boolean isDouble(String num)
+    - void paintTrail(List<NodeData> result)
+    - void shortestPath(int maxNum, TextField sourceInput, TextField destInput)
+    - void shortestPathDist(int maxNum, TextField sourceInput, TextField destInput)
+    - Boolean isInt(TextField sourceInput, TextField destInput)
+    - Boolean isInt(TextField userInput)
+    - void savePopWindow(Boolean isSaved)
+    - void isConnectedPopWindow(Boolean isConnected)
+    + static void main(String[] args, DirectedGraphAlgorithms graphAlgo)
+}
+
+class MyTimer implements AnimationTimer
 
 
 @enduml

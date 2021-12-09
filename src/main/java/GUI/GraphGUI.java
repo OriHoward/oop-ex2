@@ -117,6 +117,12 @@ public class GraphGUI extends Application {
         //edit graph options:
         addNodeAction(primaryStage, addNode);
         removeNodeAction(primaryStage, removeNode);
+        connectAction(primaryStage, connect);
+        removeEdgeAction(primaryStage, removeEdge);
+
+    }
+
+    private void connectAction(Stage primaryStage, MenuItem connect) {
         connect.setOnAction(actionEvent -> {
             Stage stage = new Stage();
             Label srcEdge = new Label("enter source in rage: 0 - " + (algos.getGraph().nodeSize() - 1));
@@ -148,8 +154,6 @@ public class GraphGUI extends Application {
             stage.setScene(sc);
             stage.show();
         });
-        removeEdgeAction(primaryStage, removeEdge);
-
     }
 
     private void removeEdgeAction(Stage primaryStage, MenuItem removeEdge) {
@@ -234,15 +238,28 @@ public class GraphGUI extends Application {
     private void centerAction(MenuItem center) {
         center.setOnAction(actionEvent -> {
             NodeData nodeCenter = algos.center();
-            int nodeCenterNum = nodeCenter.getKey();
-            Button button = nodeMap.get(nodeCenterNum);
-            button.setStyle(" -fx-background-color: black;" +
-                    "-fx-background-radius: 8em; " +
-                    "-fx-min-width: 20px; " +
-                    "-fx-min-height: 20px; " +
-                    "-fx-max-width: 20px; " +
-                    "-fx-max-height: 20px;"
-            );
+            if (nodeCenter != null) {
+                int nodeCenterNum = nodeCenter.getKey();
+                Button button = nodeMap.get(nodeCenterNum);
+                button.setStyle(" -fx-background-color: black;" +
+                        "-fx-background-radius: 8em; " +
+                        "-fx-min-width: 20px; " +
+                        "-fx-min-height: 20px; " +
+                        "-fx-max-width: 20px; " +
+                        "-fx-max-height: 20px;"
+                );
+            }
+            else {
+                Stage stage = new Stage();
+                Label label = new Label("the graph must be connected !");
+                VBox layout = new VBox(10);
+                layout.setPadding(new Insets(20, 20, 20, 20));
+                layout.getChildren().addAll(label);
+
+                Scene sc = new Scene(layout, 300, 300);
+                stage.setScene(sc);
+                stage.show();
+            }
         });
     }
 
