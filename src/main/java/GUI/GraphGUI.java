@@ -96,6 +96,7 @@ public class GraphGUI extends Application {
         primaryStage.show();
 
 
+
         cleanAction(clean);
         resetAction(primaryStage, reset);
 
@@ -118,19 +119,31 @@ public class GraphGUI extends Application {
         removeNodeAction(primaryStage, removeNode);
         connect.setOnAction(actionEvent -> {
             Stage stage = new Stage();
-            Point2D minPoint = findMinPoint();
-            Point2D maxPoint = findMaxPoint();
-            Label valueX = new Label("enter coordinate of X in range: " + minPoint.getX() + " - " + maxPoint.getX());
-            Label valueY = new Label("enter coordinate of Y in range: " + minPoint.getY() + " - " + maxPoint.getY());
-            Label id = new Label("enter node ID in range: 0 - " + algos.getGraph().nodeSize());
-            TextField textFieldX = new TextField();
-            TextField textFieldY = new TextField();
-            TextField textFieldId = new TextField();
-
-            Button button = new Button("ENTER");
+            Label srcEdge = new Label("enter source in rage: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label destEdge = new Label("enter dest in range: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label weightEdge = new Label("enter weight: ");
+            TextField textFieldSrc = new TextField();
+            TextField textFieldDest = new TextField();
+            TextField textFieldWeight = new TextField();
+            Button connectButton = new Button("connectEdge");
+            connectButton.setOnAction(actionEventRemove -> {
+                if (isInt(textFieldSrc, textFieldDest) && isDouble(textFieldWeight.getText())) {
+                    int src = Integer.parseInt(textFieldSrc.getText());
+                    int dest = Integer.parseInt(textFieldDest.getText());
+                    double weight = Double.parseDouble(textFieldWeight.getText());
+                    if (src < 0 || src > algos.getGraph().nodeSize() || dest < 0 || dest > algos.getGraph().nodeSize()) {
+                        stage.setAlwaysOnTop(false);
+                        errorPopUp();
+                    } else {
+                        algos.getGraph().connect(src,dest,weight);
+                        stage.setAlwaysOnTop(true);
+                        updateGraph(primaryStage);
+                    }
+                }
+            });
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
-            layout.getChildren().addAll();
+            layout.getChildren().addAll(srcEdge, textFieldSrc, destEdge, textFieldDest,weightEdge,textFieldWeight,connectButton);
             Scene sc = new Scene(layout, 600, 300);
             stage.setScene(sc);
             stage.show();
@@ -152,9 +165,11 @@ public class GraphGUI extends Application {
                     int src = Integer.parseInt(textFieldSrc.getText());
                     int dest = Integer.parseInt(textFieldDest.getText());
                     if (src < 0 || src > algos.getGraph().nodeSize() || dest < 0 || dest > algos.getGraph().nodeSize()) {
+                        stage.setAlwaysOnTop(false);
                         errorPopUp();
                     } else {
                         algos.getGraph().removeEdge(src, dest);
+                        stage.setAlwaysOnTop(true);
                         updateGraph(primaryStage);
                     }
                 }
@@ -188,10 +203,12 @@ public class GraphGUI extends Application {
                 if (isInt(textFieldId)) {
                     int nodeId = Integer.parseInt(textFieldId.getText());
                     if (!nodeMap.containsKey(nodeId)) {
+                        stage.setAlwaysOnTop(false);
                         removedNodeErrorMessage();
                     } else {
                         NodeData removedNode = algos.getGraph().removeNode(nodeId);
                         if (removedNode != null) {
+                            stage.setAlwaysOnTop(true);
                             updateGraph(primaryStage);
                         }
                     }
@@ -289,11 +306,13 @@ public class GraphGUI extends Application {
                     double y = Double.parseDouble(textFieldY.getText());
                     int nodeId = Integer.parseInt(textFieldId.getText());
                     if (x > maxPoint.getX() || x < minPoint.getX() || y > maxPoint.getY() || y < minPoint.getY() || nodeId < 0 || nodeId > algos.getGraph().nodeSize()) {
+                        stage.setAlwaysOnTop(false);
                         errorPopUp();
                     } else {
                         GraphNode newNode = new GraphNode(new NodeLocation(x, y, 0), nodeId);
                         algos.getGraph().addNode(newNode);
                         updateGraph(primaryStage);
+                        stage.setAlwaysOnTop(true);
 
                     }
                 }
@@ -445,7 +464,14 @@ public class GraphGUI extends Application {
         } catch (NumberFormatException e) {
             return false;
         }
-
+    }
+    private boolean isDouble(String num) {
+        try {
+            Double.parseDouble(num);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 
