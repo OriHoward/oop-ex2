@@ -111,12 +111,89 @@ public class GraphGUI extends Application {
 
 
         // run Algorithms options:
-        addNodeAction(primaryStage, addNode);
         isConnected.setOnAction(actionEvent -> isConnectedPopWindow(algos.isConnected()));
         shortestPathAction(shortestPath);
         shortestPathDistAction(shortestPathDist);
         centerAction(center);
         tspAction(tsp);
+
+        //edit graph options:
+        addNodeAction(primaryStage, addNode);
+        removeNodeAction(primaryStage, removeNode);
+        removeEdge.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            Label srcEdge = new Label("enter source in rage: 0 - " + (algos.getGraph().nodeSize() - 1));
+            Label destEdge = new Label("enter dest in range: 0 - " + (algos.getGraph().nodeSize() - 1));
+            TextField textFieldSrc = new TextField();
+            TextField textFieldDest = new TextField();
+            Button removeButton = new Button("RemoveEdge");
+            removeButton.setOnAction(actionEventRemove -> {
+                if (isInt(textFieldSrc,textFieldDest)) {
+                    int src = Integer.parseInt(textFieldSrc.getText());
+                    int dest = Integer.parseInt(textFieldDest.getText());
+                    if (src < 0 || src > algos.getGraph().nodeSize() || dest <0 || dest>algos.getGraph().nodeSize()) {
+                        errorPopUp();
+                    } else {
+                        algos.getGraph().removeEdge(src,dest);
+                        updateGraph(primaryStage);
+                    }
+
+                }
+
+            });
+
+            VBox layout = new VBox(10);
+            layout.setPadding(new Insets(20, 20, 20, 20));
+            layout.getChildren().addAll(srcEdge,textFieldSrc,destEdge,textFieldDest,removeButton);
+            Scene sc = new Scene(layout, 600, 300);
+            stage.setScene(sc);
+            stage.show();
+        });
+    }
+
+    private void popWindow(Stage stage, Label label, TextField textFieldId, Button removeButton) {
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(label, textFieldId, removeButton);
+        Scene sc = new Scene(layout, 600, 300);
+        stage.setScene(sc);
+        stage.show();
+    }
+
+    private void removeNodeAction(Stage primaryStage, MenuItem removeNode) {
+        removeNode.setOnAction(actionEvent -> {
+            Stage stage = new Stage();
+            Label label = new Label("enter node ID in range: 0 - " + (algos.getGraph().nodeSize() - 1));
+            TextField textFieldId = new TextField();
+
+            Button removeButton = new Button("Remove Node");
+            removeButton.setOnAction(actionEventRemove -> {
+                if (isInt(textFieldId)) {
+                    int nodeId = Integer.parseInt(textFieldId.getText());
+                    if (nodeId < 0 || nodeId > algos.getGraph().nodeSize()) {
+                        removedNodeErrorMessage();
+                    } else {
+                        algos.getGraph().removeNode(nodeId);
+                        updateGraph(primaryStage);
+                    }
+                }
+            });
+            popWindow(stage, label, textFieldId, removeButton);
+        });
+    }
+
+    private void removedNodeErrorMessage() {
+        Stage stage = new Stage();
+        Label label = new Label("please enter numbers in range");
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(label);
+
+        Scene sc = new Scene(layout, 300, 300);
+        stage.setScene(sc);
+        stage.show();
+
     }
 
     private void centerAction(MenuItem center) {
@@ -194,16 +271,11 @@ public class GraphGUI extends Application {
                     double y = Double.parseDouble(textFieldY.getText());
                     int nodeId = Integer.parseInt(textFieldId.getText());
                     if (x > maxPoint.getX() || x < minPoint.getX() || y > maxPoint.getY() || y < minPoint.getY() || nodeId < 0 || nodeId > algos.getGraph().nodeSize()) {
-                        nodeErrorPopUp();
+                        errorPopUp();
                     } else {
                         GraphNode newNode = new GraphNode(new NodeLocation(x, y, 0), nodeId);
                         algos.getGraph().addNode(newNode);
-                        primaryStage.close();
-                        try {
-                            start(primaryStage);
-                        } catch (Exception exep) {
-                            exep.printStackTrace();
-                        }
+                        updateGraph(primaryStage);
 
                     }
                 }
@@ -216,6 +288,15 @@ public class GraphGUI extends Application {
             stage.setScene(sc);
             stage.show();
         });
+    }
+
+    private void updateGraph(Stage primaryStage) {
+        primaryStage.close();
+        try {
+            start(primaryStage);
+        } catch (Exception exep) {
+            exep.printStackTrace();
+        }
     }
 
     private void saveAction(Stage primaryStage, FileChooser fileChooser, FileChooser saveFileChooser, MenuItem save) {
@@ -231,12 +312,7 @@ public class GraphGUI extends Application {
     private void resetAction(Stage primaryStage, Button reset) {
         reset.setOnAction(actionEvent -> {
             algos.init(originalGraphCopy);
-            primaryStage.close();
-            try {
-                start(primaryStage);
-            } catch (Exception exep) {
-                exep.printStackTrace();
-            }
+            updateGraph(primaryStage);
         });
     }
 
@@ -261,12 +337,7 @@ public class GraphGUI extends Application {
             if (chosenFile != null) {
                 String path = chosenFile.getAbsolutePath();
                 algos.load(path);
-                primaryStage.close();
-                try {
-                    start(primaryStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                updateGraph(primaryStage);
 
             }
         });
@@ -333,7 +404,7 @@ public class GraphGUI extends Application {
         return new Point2D(maxX, maxY);
     }
 
-    private void nodeErrorPopUp() {
+    private void errorPopUp() {
         Stage stage = new Stage();
         Label label = new Label("Error - please enter numbers in range");
 
