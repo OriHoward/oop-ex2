@@ -141,7 +141,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        if (src == dest) {
+        if (src == dest || src<0 || dest <0 || src>currGraph.nodeSize()-1 || dest> currGraph.nodeSize()-1) {
             return null;
         }
         dijkstra(src);
