@@ -4,6 +4,26 @@ We were given an assignment to create a graph visualizer which allows the user t
 
 ![plot](./misc/Screen%20Shot%202021-12-09%20at%2018.02.21.png)
 
+## how to run the gui
+
+To run the GUI you need to have a graph with a valid format, this is an execution example:
+`java -jar graph-visualizer.jar data/G1.json `
+
+The UI supports running all the functionality that was requested:
+1. add/remove node
+2. add/remove edge
+3. center
+4. tsp
+5. shortestPath
+6. shortestPathDist
+7. isConnected
+8. loading and saving graph to disk
+
+Each time you run an algorithm make sure you clean the graph.
+clicking on a node displays information about it
+![](./misc/img.png)
+
+
 ## Idea of the GUI implementation
 the GUI has 3 classes - the main class which is GraphGUI and 2 other classes: MyTimer, GraphScale
 we choose to use JavaFx for this implementation.
