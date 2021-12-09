@@ -47,7 +47,6 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>GUI.GraphGUI</mainClass>
-<!--                    <mainClass>GUI.LoadGraphGUI</mainClass>-->
                 </configuration>
             </plugin>
         </plugins>
