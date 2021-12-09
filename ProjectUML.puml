@@ -193,7 +193,35 @@ class GraphGui implements Application {
     + static void main(String[] args, DirectedGraphAlgorithms graphAlgo)
 }
 
-class MyTimer implements AnimationTimer
+class MyTimer implements AnimationTimer {
+    - double radius;
+    - DirectedGraphAlgorithms algos;
+    - Pane root;
+    HashMap<Integer,Button> nodeList;
+    - int width;
+    - private int height
 
+    + MyTimer(DirectedGraphAlgorithms algos, Pane root,double radius,HashMap<Integer,Button> nodeList,int width,int height)
+    + void handle(long l)
+    - void connectNodes()
+    - double endAngleInBetween(double p1X, double p1Y, double p2X, double p2Y)
+    - double startAngleInBetween(double p1X, double p1Y, double p2X, double p2Y)
+    - Point2D correctPoint(double x, double y, double angle)
+    - void drawArrow(double strPx, double strPy, double endPx, double endPy)
+    - double calculateDist(double strPx, double strPy, double endPx, double endPy)
+    - void drawNodes();
+}
+
+class GraphScale {
+    DirectedGraphAlgorithms algos;
+    Point2D minPoint;
+    Point2D maxPoint;
+    int width;
+    int height;
+
+    + GraphScale(DirectedGraphAlgorithms graph, int width, int height)
+    + void setRange()
+    + Point2D convert(Point2D point)
+}
 
 @enduml
