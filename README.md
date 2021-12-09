@@ -1,5 +1,8 @@
 # oop-ex2
 
+We were given an assignment to craete a graph visualizer which allows the user to run algorithms on the graph that we had to implement
+
+![img.png](img.png)
 
 ## Idea of implementation
 
@@ -24,9 +27,12 @@ Each edge comprises the following:
 1. source - the id of the source node
 2. dest - the id of the dest node
 3. weight - the weight of the edge
-   
-   
 
+The following algorithms were the core of the project:
+
+* Dijkstra - We have implemented the Dijkstra algorithm with the minimum heap
+* DFS - When we check whether the graph is connected we use two iterations of DFS, the first one on the original graph which inverses the graph and a 2nd one on the inversed graph
+* tsp - This function is a variation of the [Travelling_salesman_problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) where had to find the optimal path which passes through a list of given nodes
 
 ## Class overview
 
@@ -39,18 +45,26 @@ if the graph changes during the Iteration it will throw an exception.
 in order to check if the graph has changed we are using the MCount
 
 ### DirectedGraph
-This is an implementation of the `DirectedWeightedGraph`
+This is an implementation of the `DirectedWeightedGraph`.
+The details about the design of this class are in the [idea of Implementation section](##ideaOfImplementation)
+
 
 ### DirectedGraphAlgorithms
+This class is an implementation of the `DirectedWeightedGraphAlgorithms` interface
+contains implementation of Dijkstra,dfs,tsp as they were described above.
 
 ### GraphEdge
+An object representing an edge in the graph
 
 ### GraphNode
+An object representing an node in the graph
 
 ### NodeLocation
+An object representing the location of the node, this is used in the GUI to draw the nodes
 
 ### NodeTagEnum
+This Enum is used when traversing through the graph (DFS) to tag the nodes that are being traversed
 
 ### PosSerializer
-
+A serializer class used to write the data to a json file
 
