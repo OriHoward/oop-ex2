@@ -113,6 +113,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         dfsStack.add(currNode);
         while (!dfsStack.isEmpty()) {
             currNode = dfsStack.pop();
+            if (currNode == null) {
+                continue;
+            }
             scannedNodes.add(currNode.getKey());
             if (currNode.getTag() == NodeTagEnum.WHITE.getValue()) {
                 currNode.setTag(NodeTagEnum.GRAY.getValue());
