@@ -124,14 +124,4 @@ class DirectedGraphAlgorithmsTest {
         algos.init(graph);
         assertFalse(algos.isConnected());
     }
-
-    @Test
-    void removeNode(){
-        algos.load("data/G1.json");
-        DirectedWeightedGraph graph = algos.getGraph();
-        int originalLen = graph.edgeSize();
-        graph.removeNode(0);
-        assertEquals(originalLen-4,graph.edgeSize());
-
-    }
 }
