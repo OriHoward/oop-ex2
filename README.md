@@ -97,3 +97,21 @@ This Enum is used when traversing through the graph (DFS) to tag the nodes that 
 ### PosSerializer
 A serializer class used to write the data to a json file
 
+## Detailed execution details of the algorithms
+
+### Scenario 1 (1K nodes):
+* center: 3.2 sec
+* isConnected: 230ms
+
+### Scenario 2 (10K nodes):
+* center: 11.3 Min
+* isConnected: 1.3 sec
+
+### Scenario 3 (100K nodes):
+* center: 3.2 sec
+* isConnected: 230ms
+
+### Scenario 3 (1M nodes):
+
+* center: 3.2 sec
+* isConnected: 230ms

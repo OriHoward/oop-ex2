@@ -29,6 +29,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
     @Override
+    /**
+     * copies a given graph to the current graph and overrides it
+     */
     public void init(DirectedWeightedGraph g) {
         dist.clear();
         prev.clear();
@@ -51,6 +54,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     }
 
+    /**
+     * resets the variables that are populated from the algorithms in a given graph
+     * @param g
+     */
     private void resetGraphVars(DirectedWeightedGraph g) {
         dist.clear();
         prev.clear();
@@ -67,6 +74,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
     @Override
+    /**
+     * uses the apache commons jar to create a deep copy
+     */
     public DirectedWeightedGraph copy() {
 
         DirectedGraph graphCopy = (DirectedGraph) SerializationUtils.clone(this.currGraph);
@@ -79,6 +89,12 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         return isConnectedDFS();
     }
 
+    /**
+     * This function creates a copy of the original graph for the dfs traversals
+     * the first traversal is on the graph as it is and it inverses it, while the 2nd traversal is on the inverse graph
+     * this is the fastest way as it way taught in algo class
+     * @return
+     */
     public boolean isConnectedDFS() {
         DirectedGraph graphCopy = (DirectedGraph) this.copy();
         if (graphCopy == null) {
@@ -107,7 +123,15 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     }
 
-    //this dfs is iterative, so it doesn't have stackoverflow when we are going over large graphs (10k nodes)
+
+
+    /**
+     *this dfs is iterative, so it doesn't have stackoverflow when we are going over large graphs (10k nodes)
+     * this dfs also inverses the graph it receives this is the reason we use a copy of the original graph
+     * @param graph the graph to traverse
+     * @param currNode a node to start the traversal rom
+     * @param scannedNodes the hashset of the scanned nodes
+     */
     private void dfsTraversal(DirectedGraph graph, NodeData currNode, HashSet<Integer> scannedNodes) {
         Stack<NodeData> dfsStack = new Stack<>();
         dfsStack.add(currNode);
@@ -137,6 +161,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
 
     @Override
+    /**
+     * returns the length of the shortest path from src to dest
+     */
     public double shortestPathDist(int src, int dest) {
         if (currGraph.getNodeMap().get(src) == null || currGraph.getNodeMap().get(dest) == null) {
             return Integer.MAX_VALUE;
@@ -146,6 +173,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
     @Override
+    /**
+     * calculates the shortest path between src and dest and returns the path which includes all the nodes from src-->dest (included)
+     */
     public List<NodeData> shortestPath(int src, int dest) {
         if (src == dest || currGraph.getNodeMap().get(src) == null || currGraph.getNodeMap().get(dest) == null) {
             return null;
@@ -156,6 +186,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         return fullPath;
     }
 
+    /**
+     * this versino of the dijkstra algorithm is recreated the shortest path and used in the tsp and shortestPath functions
+     */
     public void dijkstra(int src) {
         resetGraphVars(currGraph);
         dist.put(src, 0.0);
@@ -193,6 +226,11 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         }
     }
 
+    /**
+     * this is a minimized version of the dijkstra algorithm that is used in the center function,
+     * this doesn't recreate the shortest path, it just calculates the distance from src to every other node
+     * @param src
+     */
     public void dijkstraMinimize(int src) {
         dist.put(src, 0.0);
         Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
@@ -201,7 +239,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         while (nodesIter.hasNext()) {
             NodeData currNode = nodesIter.next();
             if (currNode.getKey() != src) {
-                dist.put(currNode.getKey(), (double) Integer.MAX_VALUE);
+                dist.put(currNode.getKey(), Double.POSITIVE_INFINITY);
             }
             toScan.add(currNode);
         }
