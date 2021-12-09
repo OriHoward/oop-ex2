@@ -7,6 +7,7 @@ We were given an assignment to create a graph visualizer which allows the user t
 ## how to run the gui
 
 To run the GUI you need to have a graph with a valid format, this is an execution example:
+
 `java -jar graph-visualizer.jar data/G1.json `
 
 The UI supports running all the functionality that was requested:
