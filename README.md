@@ -2,7 +2,7 @@
 
 We were given an assignment to craete a graph visualizer which allows the user to run algorithms on the graph that we had to implement
 
-![alt text](misc/Screen Shot 2021-12-09 at 18.02.21.png)
+![](misc/Screen Shot 2021-12-09 at 18.02.21.png)
 
 ## Idea of implementation
 
