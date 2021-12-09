@@ -137,11 +137,8 @@ public class GraphGUI extends Application {
                         algos.getGraph().removeEdge(src,dest);
                         updateGraph(primaryStage);
                     }
-
                 }
-
             });
-
             VBox layout = new VBox(10);
             layout.setPadding(new Insets(20, 20, 20, 20));
             layout.getChildren().addAll(srcEdge,textFieldSrc,destEdge,textFieldDest,removeButton);
