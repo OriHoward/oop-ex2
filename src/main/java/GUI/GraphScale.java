@@ -23,7 +23,9 @@ public class GraphScale {
         setRange();
     }
 
-
+    /**
+     * this function find the minimum point and the maximum point
+     */
     public void setRange() {
         double minX = Integer.MAX_VALUE;
         double minY = Integer.MAX_VALUE;
@@ -41,6 +43,11 @@ public class GraphScale {
         this.maxPoint = new Point2D.Double(maxX,maxY);
     }
 
+    /**
+     * this function convert a given point to the correct point for the windows size we want to display
+     * @param point
+     * @return
+     */
     public Point2D convert(Point2D point) {
         double rangeOfX = Math.abs(this.minPoint.getX() - this.maxPoint.getX());
         double rangeOfY = Math.abs(this.minPoint.getY() - this.maxPoint.getY());

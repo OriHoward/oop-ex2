@@ -36,12 +36,19 @@ public class MyTimer extends AnimationTimer {
         this.height = height;
     }
 
+    /**
+     * this is the main function which handles all the drawings
+     * @param l
+     */
     @Override
     public void handle(long l) {
         drawNodes();
         connectNodes();
     }
 
+    /**
+     * this function connect all the edges between the nodes
+     */
     private void connectNodes() {
         Iterator<EdgeData> edgeIter = this.algos.getGraph().edgeIter();
         while (edgeIter.hasNext()) {
@@ -71,6 +78,14 @@ public class MyTimer extends AnimationTimer {
         }
     }
 
+    /**
+     * this function calculating the angle between 2 nodes in the graph
+     * @param p1X
+     * @param p1Y
+     * @param p2X
+     * @param p2Y
+     * @return
+     */
     private double endAngleInBetween(double p1X, double p1Y, double p2X, double p2Y) {
         double distX = p2X-p1X;
         double distY = p2Y-p1Y;
@@ -79,7 +94,14 @@ public class MyTimer extends AnimationTimer {
         return angle;
     }
 
-
+    /**
+     * this function calculation the angle between 2 nodes in the graph
+     * @param p1X
+     * @param p1Y
+     * @param p2X
+     * @param p2Y
+     * @return
+     */
     private double startAngleInBetween(double p1X, double p1Y, double p2X, double p2Y) {
         double distX = p1X - p2X;
         double distY = p1Y - p2Y;
@@ -88,6 +110,13 @@ public class MyTimer extends AnimationTimer {
         return angle;
     }
 
+    /**
+     * this function return the corrected point for the edges
+     * @param x
+     * @param y
+     * @param angle
+     * @return
+     */
     private Point2D correctPoint(double x, double y, double angle) {
         angle = angle - Math.toRadians(90.0);
         double newPosX = Math.round((float) (x + Math.cos(angle) * this.radius));
@@ -96,7 +125,13 @@ public class MyTimer extends AnimationTimer {
     }
 
 
-
+    /**
+     * this function draw a little arrow to make the graph directed
+     * @param strPx
+     * @param strPy
+     * @param endPx
+     * @param endPy
+     */
     private void drawArrow(double strPx, double strPy, double endPx, double endPy) {
         double dist = calculateDist(strPx, strPy, endPx, endPy);
         double leftX = endPx + ((15 / dist) * (((strPx - endPx) * Math.cos(50)) + ((strPy - endPy) * (Math.sin(50)))));
@@ -118,12 +153,23 @@ public class MyTimer extends AnimationTimer {
         this.root.getChildren().addAll(leftLine, rightLine);
     }
 
+    /**
+     * this function calculates the distance between 2 nodes in the graph
+     * @param strPx
+     * @param strPy
+     * @param endPx
+     * @param endPy
+     * @return
+     */
     private double calculateDist(double strPx, double strPy, double endPx, double endPy) {
         double distX = Math.pow(Math.abs(strPx - endPx), 2);
         double distY = Math.pow(Math.abs(strPy - endPy), 2);
         return Math.sqrt(distX + distY);
     }
 
+    /**
+     * this function draw all the nodes in the graph
+     */
     private void drawNodes() {
         GraphScale scale = new GraphScale(this.algos, this.width, this.height);
         Iterator<NodeData> nodeIter = this.algos.getGraph().nodeIter();
@@ -165,6 +211,10 @@ public class MyTimer extends AnimationTimer {
         }
     }
 
+    /**
+     * this function check if a node is out of bounds from the window size and correct it accordingly
+     * @param button
+     */
     private void checkBounds(Button button) {
         double centerX = button.getLayoutX();
         double centerY = button.getLayoutY();
