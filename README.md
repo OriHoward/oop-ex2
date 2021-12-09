@@ -1,8 +1,37 @@
 # oop-ex2
 
-We were given an assignment to craete a graph visualizer which allows the user to run algorithms on the graph that we had to implement
+We were given an assignment to create a graph visualizer which allows the user to run algorithms on the graph that we had to implement
 
 ![plot](./misc/Screen%20Shot%202021-12-09%20at%2018.02.21.png)
+
+## Idea of the GUI implementation
+the GUI has 3 classes - the main class which is GraphGUI and 2 other classes: MyTimer, GraphScale
+we choose to use JavaFx for this implementation.
+
+####GraphScale class
+this class has a very specific role - it takes a point and changes the X and Y coordinates to fit
+for every window size.
+this class has 2 functions - the first function finds the minimum and the maximum points.
+the second function gets a point and changes its coordinates accordingly to the window size.
+
+####MyTimer class
+this class extends AnimationTimer
+it has a main function - 'Handle' - which allow us to iterate through all the nodes and edges to draw each one of them in the window displayed.
+the other functions in the class have different calculations which help us to draw the graph correctly
+
+####GraphGUI class
+this class is the main class of the GUI and it extends Application
+the Application interface has one main function that runs the whole algorithm - 'start'
+we use this class for our main window which displays the toolbar,the graph itself.
+the toolbar has different options:
+File - you can save and load any json file graph. 
+Edit - you can edit the graph by adding and removing different nodes and edges
+RunAlgorithm - you can choose to run any algorithm from the DirectedGraphAlgorithm class
+clean - cleaning the graph and the colors of the nodes
+reset - role back all the changes and displays the original graph.
+
+
+
 
 ## Idea of implementation
 
@@ -31,6 +60,7 @@ Each edge comprises the following:
 The following algorithms were the core of the project:
 
 * Dijkstra - We have implemented the Dijkstra algorithm with the minimum heap
+source of the Dijkstra algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 * DFS - When we check whether the graph is connected we use two iterations of DFS, the first one on the original graph which inverses the graph and a 2nd one on the inverse graph
 
 ## Class overview
