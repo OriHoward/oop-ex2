@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,13 +58,13 @@ class DirectedGraphAlgorithmsTest {
     void dijkstra() {
         algos.load("dataTests/dijkstraTest.json");
         algos.dijkstra(1);
-        Double[] dist = algos.getDist();
-        assertEquals(1.9, dist[0], EPSILON);
-        assertEquals(0.0, dist[1], EPSILON);
-        assertEquals(0.4, dist[2], EPSILON);
-        assertEquals(1.2, dist[3], EPSILON);
-        assertEquals(Integer.MAX_VALUE, dist[4], EPSILON);
-        assertEquals(2.4, dist[5], EPSILON);
+        HashMap<Integer,Double> dist = algos.getDist();
+        assertEquals(1.9, dist.get(0), EPSILON);
+        assertEquals(0.0, dist.get(1), EPSILON);
+        assertEquals(0.4, dist.get(2), EPSILON);
+        assertEquals(1.2, dist.get(3), EPSILON);
+        assertEquals(Integer.MAX_VALUE, dist.get(4), EPSILON);
+        assertEquals(2.4, dist.get(5), EPSILON);
     }
 
     @Test
