@@ -29,6 +29,13 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
         parsedEdges = new ArrayList<>();
     }
 
+    public DirectedGraph(String jsonfile) {
+        this.MCount = 0;
+        this.nodeMap = new HashMap<>();
+        parsedEdges = new ArrayList<>();
+        this.loadGraph(jsonfile);
+    }
+
     @Override
     public NodeData getNode(int key) {
         return nodeMap.get(key);
@@ -97,6 +104,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
     @Override
     public NodeData removeNode(int key) {
         GraphNode currNode = (GraphNode) this.nodeMap.get(key);
+        if (currNode==null){
+            return null;
+        }
         //remove this node from the dest mapping of each father
         currNode.getSourceMap().keySet().forEach(nodeKey -> {
             GraphNode currFather = (GraphNode) this.nodeMap.get(nodeKey);

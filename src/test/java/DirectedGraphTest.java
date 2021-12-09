@@ -1,3 +1,4 @@
+import algos.DirectedGraph;
 import algos.DirectedGraphAlgorithms;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
@@ -11,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class DirectedGraphTest {
@@ -88,6 +88,24 @@ class DirectedGraphTest {
                 counter += 1;
             }
         });
+    }
+
+    @Test
+    void testFileConstructor() {
+        DirectedWeightedGraph graph = new DirectedGraph("data/G1.json");
+        assertTrue(graph.edgeSize() > 0);
+        DirectedWeightedGraph graph2 = new DirectedGraph("G1.json");
+        assertTrue(graph2.edgeSize() == 0);
+    }
+
+    @Test
+    void removeNode() {
+        algos.load("data/G1.json");
+        DirectedWeightedGraph graph = algos.getGraph();
+        int originalLen = graph.edgeSize();
+        graph.removeNode(0);
+        assertEquals(originalLen - 4, graph.edgeSize());
+        assertNull(graph.removeNode(0));
     }
 
 }
