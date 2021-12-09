@@ -37,6 +37,12 @@ public class GraphGUI extends Application {
     double radius = 10;
     DirectedWeightedGraph originalGraphCopy = algos.copy();
 
+    /**
+     * this is the main function which runs the whole GUI
+     * @param primaryStage
+     * @throws Exception
+     */
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Graph");
@@ -122,6 +128,13 @@ public class GraphGUI extends Application {
 
     }
 
+    /**
+     * this function is the action performed when you click the connect button in the toolbar
+     * it runs the connect algorithm  which adds one edge between 2 nodes
+     * @param primaryStage
+     * @param connect
+     */
+
     private void connectAction(Stage primaryStage, MenuItem connect) {
         connect.setOnAction(actionEvent -> {
             Stage stage = new Stage();
@@ -156,6 +169,13 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function is the action performed when you click the removeEdge button in the toolbar
+     * it calls the removeEdge function which removing any edge the user is choosing to remove
+     * @param primaryStage
+     * @param removeEdge
+     */
+
     private void removeEdgeAction(Stage primaryStage, MenuItem removeEdge) {
         removeEdge.setOnAction(actionEvent -> {
             Stage stage = new Stage();
@@ -187,6 +207,7 @@ public class GraphGUI extends Application {
         });
     }
 
+
     private void popWindow(Stage stage, Label label, TextField textFieldId, Button removeButton) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
@@ -196,6 +217,10 @@ public class GraphGUI extends Application {
         stage.show();
     }
 
+    /**
+     * this function is the action performed when you click the removeNode button in the toolbar
+     *  it calls the removeNode function which removing any node the user is choosing to remove
+     */
     private void removeNodeAction(Stage primaryStage, MenuItem removeNode) {
         removeNode.setOnAction(actionEvent -> {
             Stage stage = new Stage();
@@ -222,6 +247,9 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function pop an error message for the removedNode action
+     */
     private void removedNodeErrorMessage() {
         Stage stage = new Stage();
         Label label = new Label("Node Id does not exist");
@@ -234,6 +262,12 @@ public class GraphGUI extends Application {
         stage.show();
 
     }
+
+    /**
+     * this function is the action performed when you click the center button in the toolbar
+     * it runs the center algorithm which find the center node of the graph.
+     * @param center
+     */
 
     private void centerAction(MenuItem center) {
         center.setOnAction(actionEvent -> {
@@ -263,6 +297,11 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function is the action performed when you click the shortestPathDist button in the toolbar
+     * it runs the shortestPathDist algorithm which showing the shortestPath distance between 2 nodes
+     * @param shortestPathDist
+     */
     private void shortestPathDistAction(MenuItem shortestPathDist) {
         shortestPathDist.setOnAction(actionEvent -> {
             Stage stage = new Stage();
@@ -282,6 +321,12 @@ public class GraphGUI extends Application {
             stage.show();
         });
     }
+
+    /**
+     * this function is the action performed when you click the shortestPath button in the toolbar
+     * it runs the shortestPath algorithm which showing the fastest path between 2 different nodes
+     * @param shortestPath
+     */
 
     private void shortestPathAction(MenuItem shortestPath) {
         shortestPath.setOnAction(actionEvent -> {
@@ -303,6 +348,13 @@ public class GraphGUI extends Application {
             stage.show();
         });
     }
+
+    /**
+     * this function is the action performed when you click the addNode button in the toolbar
+     * it calls the addNode function which adding a node by the user choice
+     * @param primaryStage
+     * @param addNode
+     */
 
     private void addNodeAction(Stage primaryStage, MenuItem addNode) {
         addNode.setOnAction(actionEvent -> {
@@ -344,6 +396,11 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function refreshes the window in order to update the graph
+     * @param primaryStage
+     */
+
     private void updateGraph(Stage primaryStage) {
         primaryStage.close();
         try {
@@ -352,6 +409,15 @@ public class GraphGUI extends Application {
             exep.printStackTrace();
         }
     }
+
+    /**
+     * this function is the action performed when you click the save button in the toolbar
+     * this button let you save the current graph displayed
+     * @param primaryStage
+     * @param fileChooser
+     * @param saveFileChooser
+     * @param save
+     */
 
     private void saveAction(Stage primaryStage, FileChooser fileChooser, FileChooser saveFileChooser, MenuItem save) {
         save.setOnAction(actionEvent -> {
@@ -362,6 +428,12 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function is the action performed when you click the reset button in the toolbar
+     * role back to the original graph
+     * @param primaryStage
+     * @param reset
+     */
 
     private void resetAction(Stage primaryStage, Button reset) {
         reset.setOnAction(actionEvent -> {
@@ -369,6 +441,12 @@ public class GraphGUI extends Application {
             updateGraph(primaryStage);
         });
     }
+
+    /**
+     * this function is the action performed when you click the clean button in the toolbar
+     * it cleans all the colors which has been painted
+     * @param clean
+     */
 
     private void cleanAction(Button clean) {
         clean.setOnAction(actionEvent -> {
@@ -387,6 +465,14 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * this function is the action performed when you click the load button in the toolbar
+     * it let you loads any graph to display
+     * @param primaryStage
+     * @param fileChooser
+     * @param load
+     */
+
     private void loadAction(Stage primaryStage, FileChooser fileChooser, MenuItem load) {
         load.setOnAction(actionEvent -> {
             File chosenFile = fileChooser.showOpenDialog(primaryStage);
@@ -398,6 +484,12 @@ public class GraphGUI extends Application {
             }
         });
     }
+
+    /**
+     * this function is the action performed when you click the tsp button in the toolbar
+     * it runs the Tsp algorithm and giving you the fastest Path trail
+     * @param tsp
+     */
 
     private void tspAction(MenuItem tsp) {
         tsp.setOnAction(actionEvent -> {
@@ -435,6 +527,10 @@ public class GraphGUI extends Application {
         });
     }
 
+    /**
+     * find min point
+     * @return
+     */
 
     private Point2D findMinPoint() {
         double minX = Integer.MAX_VALUE;
@@ -448,6 +544,11 @@ public class GraphGUI extends Application {
         return new Point2D(minX, minY);
     }
 
+    /**
+     * find max point
+     * @return
+     */
+
     private Point2D findMaxPoint() {
         double maxX = Integer.MIN_VALUE;
         double maxY = Integer.MIN_VALUE;
@@ -460,6 +561,9 @@ public class GraphGUI extends Application {
         return new Point2D(maxX, maxY);
     }
 
+    /**
+     * error pop up message
+     */
     private void errorPopUp() {
         Stage stage = new Stage();
         Label label = new Label("Error - please enter numbers in range");
@@ -528,6 +632,13 @@ public class GraphGUI extends Application {
 
     }
 
+    /**
+     * assistance method for the shortest path action button
+     * @param maxNum
+     * @param sourceInput
+     * @param destInput
+     */
+
     private void shortestPath(int maxNum, TextField sourceInput, TextField destInput) {
         Stage popWindow = new Stage();
         Label label = new Label();
@@ -572,6 +683,13 @@ public class GraphGUI extends Application {
         popWindow.setScene(popScene);
         popWindow.showAndWait();
     }
+
+    /**
+     * assistance method for the shortestPathDist action button
+     * @param maxNum
+     * @param sourceInput
+     * @param destInput
+     */
 
     public void shortestPathDist(int maxNum, TextField sourceInput, TextField destInput) {
         Stage popWindow = new Stage();
