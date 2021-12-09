@@ -42,13 +42,20 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
+        if (alg.getGraph() == null) {
+            System.out.println("Bad Json was provided");
+        } else {
+            GraphGUI.main(new String[]{}, (DirectedGraphAlgorithms) alg);
+        }
 
-        DirectedWeightedGraphAlgorithms algos = new DirectedGraphAlgorithms();
-        algos.load(json_file);
-        GraphGUI.main(new String[]{}, (DirectedGraphAlgorithms) algos);
     }
 
     public static void main(String[] args) {
-        runGUI("data/G3.json");
+        if (args.length == 0) {
+            System.out.println("please provide a valid file path");
+        } else {
+            String givenPath = args[0];
+            runGUI(givenPath);
+        }
     }
 }
