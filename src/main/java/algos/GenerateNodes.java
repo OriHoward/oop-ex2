@@ -40,7 +40,7 @@ public class GenerateNodes {
             node = new GraphNode(pos,i);
             algos.getGraph().addNode(node);
         }
-        for (int i =currSize+ 1; i < 99; i++) {
+        for (int i =currSize -1; i < 99; i++) {
             algos.getGraph().connect(i,i+1,Math.random()*10);
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
@@ -60,7 +60,7 @@ public class GenerateNodes {
             node = new GraphNode(pos,i);
             algos.getGraph().addNode(node);
         }
-        for (int i =currSize+ 1; i < 999; i++) {
+        for (int i =currSize-1; i < 999; i++) {
             algos.getGraph().connect(i,i+1,Math.random()*10);
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
@@ -79,7 +79,7 @@ public class GenerateNodes {
             node = new GraphNode(pos,i);
             algos.getGraph().addNode(node);
         }
-        for (int i =currSize+ 1; i < 9999; i++) {
+        for (int i =currSize-1; i < 9999; i++) {
             algos.getGraph().connect(i,i+1,Math.random()*10);
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
@@ -99,7 +99,7 @@ public class GenerateNodes {
             node = new GraphNode(pos,i);
             algos.getGraph().addNode(node);
         }
-        for (int i =currSize+ 1; i < 99999; i++) {
+        for (int i =currSize-1; i < 99999; i++) {
             algos.getGraph().connect(i,i+1,Math.random()*10);
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
@@ -119,7 +119,7 @@ public class GenerateNodes {
             node = new GraphNode(pos,i);
             algos.getGraph().addNode(node);
         }
-        for (int i =currSize+ 1; i < 999999; i++) {
+        for (int i =currSize-1; i < 999999; i++) {
             algos.getGraph().connect(i,i+1,Math.random()*10);
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
@@ -158,5 +158,6 @@ public class GenerateNodes {
         generate.generateOneMillion();
         String f1000000 = String.format("generated %s nodes \ngenerated %s edges",generate.graph.nodeSize(),generate.graph.edgeSize());
         System.out.println(f1000000);
+
     }
 }
