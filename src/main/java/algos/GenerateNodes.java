@@ -25,10 +25,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >18) {
+            if (algos.getGraph().edgeSize() >99) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*10,(int)(Math.random())*10,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(10)),(int)(Math.random()*(10)),(Math.random())*10);
         }
         algos.save("10Nodes");
     }
@@ -45,10 +45,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >190) {
+            if (algos.getGraph().edgeSize() >1999) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*100,(int)(Math.random())*100,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(100)),(int)(Math.random()*(100)),(Math.random())*10);
         }
         algos.save("100Nodes");
     }
@@ -65,10 +65,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >1990) {
+            if (algos.getGraph().edgeSize() >19999) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*1000,(int)(Math.random())*1000,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(1000)),(int)(Math.random()*(1000)),(Math.random())*10);
         }
         algos.save("1000Nodes");
     }
@@ -84,10 +84,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >19900) {
+            if (algos.getGraph().edgeSize() >199999) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*10000,(int)(Math.random())*10000,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(10000)),(int)(Math.random()*(10000)),(Math.random())*10);
         }
         algos.save("10000Nodes");
 
@@ -104,10 +104,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >199900) {
+            if (algos.getGraph().edgeSize() >1999999) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*100000,(int)(Math.random())*100000,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(100000)),(int)(Math.random()*(100000)),(Math.random())*10);
         }
         algos.save("100000Nodes");
 
@@ -124,10 +124,10 @@ public class GenerateNodes {
             algos.getGraph().connect(i +1,i,Math.random()*10);
         }
         for (int i = 0; i <bigSize; i++) {
-            if (algos.getGraph().edgeSize() >1999900) {
+            if (algos.getGraph().edgeSize() >4999999) {
                 break;
             }
-            algos.getGraph().connect((int)(Math.random())*1000000,(int)(Math.random())*1000000,(Math.random())*10);
+            algos.getGraph().connect((int)(Math.random()*(1000000)),(int)(Math.random()*(1000000)),(Math.random())*10);
         }
         algos.save("1000000Nodes");
     }
