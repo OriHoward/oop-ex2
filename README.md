@@ -36,7 +36,7 @@ clicking on a node displays information about it
 the GUI has 3 classes - the main class which is GraphGUI and 2 other classes: MyTimer, GraphScale
 we choose to use JavaFx for this implementation.
 
-####GraphScale class
+#### GraphScale class
 this class has a very specific role - it takes a point and changes the X and Y coordinates to fit
 for every window size.  
 this class has 2 functions: 
@@ -45,7 +45,7 @@ setRange() - this function finds the minimum and the maximum points.
 convert() - this function gets a point and changes its coordinates accordingly to the window size.  
 
 
-####MyTimer class
+#### MyTimer class
 this class extends AnimationTimer  
 it has a main function - 'Handle' - which allow us to iterate through all the nodes and edges to draw each one of them in the window displayed.  
 the other functions in the class have different calculations which help us to draw the graph correctly.  
@@ -55,7 +55,7 @@ connectNode() - this function connect all the edges between the nodes.
 drawArrow() - this function draw a little arrow to make the graph directed.  
 drawNodes() - this function draw all the nodes in the graph.  
 
-####GraphGUI class
+#### GraphGUI class
 this class is the main class of the GUI and it extends Application  
 the Application interface has one main function that runs the whole algorithm - 'start'  
 we use this class for our main window which displays the toolbar,the graph itself.  
@@ -144,8 +144,14 @@ A serializer class used to write the data to a json file
 
 ### Scenario 3 (100K nodes):
 * center: a few hours
-* isConnected: 19.7s
+* isConnected: 17.1s
 
 ### Scenario 4 (1M nodes):
-generating the graph resulted in out of memory.
+generating the graph with 20 edges in average resulted in out of memory.  
+we tried 10 edges in average and resulted in out of memory as well.  
+the 1M nodes graph we generated has 5 edges in average.  
+
+* center: a few hours
+* isConnected: 55.2s
+
 
