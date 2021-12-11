@@ -134,24 +134,13 @@ A serializer class used to write the data to a json file
 
 ## Detailed execution details of the algorithms
 
-### Scenario 1 (1K nodes):
-* center: 3.2 sec
-* isConnected: 230ms
-
-### Scenario 2 (10K nodes):
-* center: 11.3 Min
-* isConnected: 1.3 sec
-
-### Scenario 3 (100K nodes):
-* center: a few hours
-* isConnected: 17.1s
-
-### Scenario 4 (1M nodes):
-generating the graph with 20 edges in average resulted in out of memory.  
-we tried 10 edges in average and resulted in out of memory as well.  
-the 1M nodes graph we generated has 5 edges in average.  
-
-* center: a few hours
-* isConnected: 55.2s
-
+| Graph Size | isConnected | Center  |
+|------------|-------------|---------|
+| 1000       |   380msec   | 1.6 sec |
+| 10k        |   1.9sec    | 4.1 Min |
+| 100k       |   17sec     |too long |
+| 1M         |   51sec     |too long |
+| G1 (16)    |   79msec    |  81msec  |
+| G2 (31)    |   84msec    |  90msec |
+| G3 (48)    |   93msec    | 101msec |
 
