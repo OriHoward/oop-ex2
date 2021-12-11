@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,13 +57,15 @@ class DirectedGraphAlgorithmsTest {
     void dijkstra() {
         algos.load("dataTests/dijkstraTest.json");
         algos.dijkstra(1);
-        HashMap<Integer,Double> dist = algos.getDist();
-        assertEquals(1.9, dist.get(0), EPSILON);
-        assertEquals(0.0, dist.get(1), EPSILON);
-        assertEquals(0.4, dist.get(2), EPSILON);
-        assertEquals(1.2, dist.get(3), EPSILON);
-        assertEquals(Integer.MAX_VALUE, dist.get(4), EPSILON);
-        assertEquals(2.4, dist.get(5), EPSILON);
+        DirectedGraph graph = (DirectedGraph) algos.getGraph();
+
+
+        assertEquals(1.9, graph.getNodeDist(0), EPSILON);
+        assertEquals(0.0, graph.getNodeDist(1), EPSILON);
+        assertEquals(0.4, graph.getNodeDist(2), EPSILON);
+        assertEquals(1.2, graph.getNodeDist(3), EPSILON);
+        assertEquals(Integer.MAX_VALUE, graph.getNodeDist(4), EPSILON);
+        assertEquals(2.4, graph.getNodeDist(5), EPSILON);
     }
 
     @Test
@@ -72,7 +73,7 @@ class DirectedGraphAlgorithmsTest {
         algos.load("dataTests/centerTest.json");
         NodeData expectedNode = algos.getGraph().getNode(2);
         assertEquals(expectedNode, algos.center());
-        algos.load("data/1000Nodes.json");
+        algos.load("dataTests/1000Nodes.json");
         NodeData expectedNode2 = algos.getGraph().getNode(362);
         assertEquals(expectedNode2, algos.center());
     }

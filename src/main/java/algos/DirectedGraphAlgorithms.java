@@ -14,26 +14,21 @@ import java.util.*;
 public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms {
 
     private DirectedGraph currGraph;
-    private HashMap<Integer, Double> dist = new HashMap<>();
     private HashMap<Integer, List<NodeData>> prev = new HashMap();
-    private Comparator<NodeData> byWeightNew = (NodeData n1, NodeData n2) -> {
-        double firstDist = dist.get(n1.getKey());
-        double secondDist = dist.get(n2.getKey());
+    private Comparator<GraphNode> byWeightNew = (GraphNode n1, GraphNode n2) -> {
+        double firstDist = n1.getDist();
+        double secondDist = n2.getDist();
         if (firstDist == secondDist)
             return 0;
         return firstDist - secondDist > 0 ? 1 : -1;
     };
 
-    public HashMap<Integer, Double> getDist() {
-        return dist;
-    }
 
     @Override
     /**
      * copies a given graph to the current graph and overrides it
      */
     public void init(DirectedWeightedGraph g) {
-        dist.clear();
         prev.clear();
 
         DirectedGraph newGraph = (DirectedGraph) g;
@@ -56,10 +51,10 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
 
     /**
      * resets the variables that are populated from the algorithms in a given graph
+     *
      * @param g
      */
     private void resetGraphVars(DirectedWeightedGraph g) {
-        dist.clear();
         prev.clear();
         Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
@@ -93,6 +88,7 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
      * This function creates a copy of the original graph for the dfs traversals
      * the first traversal is on the graph as it is and it inverses it, while the 2nd traversal is on the inverse graph
      * this is the fastest way as it way taught in algo class
+     *
      * @return
      */
     public boolean isConnectedDFS() {
@@ -124,12 +120,12 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     }
 
 
-
     /**
-     *this dfs is iterative, so it doesn't have stackoverflow when we are going over large graphs (10k nodes)
+     * this dfs is iterative, so it doesn't have stackoverflow when we are going over large graphs (10k nodes)
      * this dfs also inverses the graph it receives this is the reason we use a copy of the original graph
-     * @param graph the graph to traverse
-     * @param currNode a node to start the traversal rom
+     *
+     * @param graph        the graph to traverse
+     * @param currNode     a node to start the traversal rom
      * @param scannedNodes the hashset of the scanned nodes
      */
     private void dfsTraversal(DirectedGraph graph, NodeData currNode, HashSet<Integer> scannedNodes) {
@@ -169,7 +165,8 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
             return Integer.MAX_VALUE;
         }
         dijkstra(src);
-        return dist.get(dest);
+        GraphNode chosenNode = (GraphNode) currGraph.getNodeMap().get(dest);
+        return chosenNode.getDist();
     }
 
     @Override
@@ -191,29 +188,30 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
      */
     public void dijkstra(int src) {
         resetGraphVars(currGraph);
-        dist.put(src, 0.0);
-        Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
+        GraphNode currNode = (GraphNode) this.getGraph().getNode(src);
+        currNode.setDist(0.0);
+        Queue<GraphNode> toScan = new PriorityQueue<>(byWeightNew);
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
 
         while (nodesIter.hasNext()) {
-            NodeData currNode = nodesIter.next();
+            currNode = (GraphNode) nodesIter.next();
             if (currNode.getKey() != src) {
-                dist.put(currNode.getKey(), (double) Integer.MAX_VALUE);
+                currNode.setDist(Integer.MAX_VALUE);
                 prev.put(currNode.getKey(), new ArrayList<>());
             }
             toScan.add(currNode);
         }
 
         while (!toScan.isEmpty()) {
-            NodeData currNode = toScan.remove();
+            currNode = toScan.remove();
             Iterator<EdgeData> edgeIter = this.currGraph.edgeIter(currNode.getKey());
             EdgeData currEdge;
             while (edgeIter.hasNext()) {
                 currEdge = edgeIter.next();
-                NodeData neighbor = this.currGraph.getNode(currEdge.getDest());
-                double alt = dist.get(currNode.getKey()) + currEdge.getWeight();
-                if (alt < dist.get(neighbor.getKey())) {
-                    dist.put(neighbor.getKey(), alt);
+                GraphNode neighbor = (GraphNode) this.currGraph.getNode(currEdge.getDest());
+                double alt = currNode.getDist() + currEdge.getWeight();
+                if (alt < neighbor.getDist()) {
+                    neighbor.setDist(alt);
                     // add the list of the currNode
                     if (prev.get(currNode.getKey()) != null) {
 
@@ -229,31 +227,33 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
     /**
      * this is a minimized version of the dijkstra algorithm that is used in the center function,
      * this doesn't recreate the shortest path, it just calculates the distance from src to every other node
+     *
      * @param src
      */
     public void dijkstraMinimize(int src) {
-        dist.put(src, 0.0);
-        Queue<NodeData> toScan = new PriorityQueue<>(byWeightNew);
+        GraphNode currNode = (GraphNode) this.getGraph().getNode(src);
+        currNode.setDist(0.0);
+        Queue<GraphNode> toScan = new PriorityQueue<>(byWeightNew);
         Iterator<NodeData> nodesIter = this.currGraph.nodeIter();
 
         while (nodesIter.hasNext()) {
-            NodeData currNode = nodesIter.next();
+            currNode = (GraphNode) nodesIter.next();
             if (currNode.getKey() != src) {
-                dist.put(currNode.getKey(), Double.POSITIVE_INFINITY);
+                currNode.setDist(Integer.MAX_VALUE);
             }
             toScan.add(currNode);
         }
 
         while (!toScan.isEmpty()) {
-            NodeData currNode = toScan.remove();
+            currNode = toScan.remove();
             Iterator<EdgeData> edgeIter = this.currGraph.edgeIter(currNode.getKey());
             EdgeData currEdge;
             while (edgeIter.hasNext()) {
                 currEdge = edgeIter.next();
-                NodeData neighbor = this.currGraph.getNode(currEdge.getDest());
-                double alt = dist.get(currNode.getKey()) + currEdge.getWeight();
-                if (alt < dist.get(neighbor.getKey())) {
-                    dist.put(neighbor.getKey(), alt);
+                GraphNode neighbor = (GraphNode) this.currGraph.getNode(currEdge.getDest());
+                double alt = currNode.getDist() + currEdge.getWeight();
+                if (alt < neighbor.getDist()) {
+                    neighbor.setDist(alt);
                     toScan.add(neighbor);
                 }
             }
@@ -274,8 +274,9 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
             currNode = nodeIter.next();
             dijkstraMinimize(currNode.getKey());
             int minmaxIdx = findMax();
-            if (dist.get(minmaxIdx) < currMinMax) {
-                currMinMax = dist.get(minmaxIdx);
+            GraphNode node = (GraphNode) this.currGraph.getNode(minmaxIdx);
+            if (node.getDist() < currMinMax) {
+                currMinMax = node.getDist();
                 chosenNode = currNode.getKey();
             }
         }
@@ -287,11 +288,12 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         double max = Integer.MIN_VALUE;
         int maxIdx = 0;
 
-        for (Integer nodeId : dist.keySet()) {
-            double nodeDist = dist.get(nodeId);
-            if (nodeDist > max) {
-                max = nodeDist;
-                maxIdx = nodeId;
+        Iterator<NodeData> nodeDataIterator = this.getGraph().nodeIter();
+        while (nodeDataIterator.hasNext()) {
+            GraphNode curGraphNode = (GraphNode) nodeDataIterator.next();
+            if (curGraphNode.getDist() > max) {
+                max = curGraphNode.getDist();
+                maxIdx = curGraphNode.getKey();
             }
         }
         return maxIdx;
@@ -344,7 +346,8 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
         while (cityIter.hasNext()) {
             int destNodeId = cityIter.next().getKey();
             List<NodeData> firstDirection = shortestPath(firstNodeId, destNodeId);
-            pathMap.put(firstDirection, dist.get(destNodeId));
+            GraphNode node = (GraphNode) this.currGraph.getNode(destNodeId);
+            pathMap.put(firstDirection, node.getDist());
         }
 
         List<NodeData> optimalPath = getOptimalPathFromMap(cities, pathMap);
@@ -368,7 +371,8 @@ public class DirectedGraphAlgorithms implements DirectedWeightedGraphAlgorithms 
                 if (firstNodeId != secondNodeId) {
                     double pathCost = 0;
                     List<NodeData> shortestPath = shortestPath(firstNodeId, secondNodeId);
-                    pathCost += dist.get(secondNodeId);
+                    GraphNode node = (GraphNode) this.currGraph.getNode(secondNodeId);
+                    pathCost += node.getDist();
                     pathMap.put(shortestPath, pathCost);
                 }
             }
