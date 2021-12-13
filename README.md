@@ -32,6 +32,25 @@ clicking on a node displays information about it
 ![](./misc/img.png)
 
 
+## Using the GUI
+
+In the Gui you are able to run all the algorithms implemented in the Exercise:
+1. load/save current graph
+2. edit the graph
+   1. add/remove an edge
+   2. add/remove a node
+3. run an algorithm - after running each algorithm clean the graph before you execute the next one (click on clean)
+   1. tsp - displays the shortest path that goes through the given nodes in an optimal way and highlights the nodes
+   2. center - highlights the center of the graph
+   3. shortestPath - the shortest path between two nodes and highlights it
+   4. isConnected - displays a message whether the graph is connected or not
+   5. shortestPathDist - displays the minimal distance between two nodes
+4. clean - cleaning the graph
+5. reset - resets the graph to it's initial state
+
+clicking on a node displays information about it like its location and the id and so on
+
+
 ## Idea of the GUI implementation
 the GUI has 3 classes - the main class which is GraphGUI and 2 other classes: MyTimer, GraphScale
 we choose to use JavaFx for this implementation.
