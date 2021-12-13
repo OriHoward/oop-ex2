@@ -12,6 +12,7 @@ public class GraphNode implements NodeData, Serializable {
     @Expose private GeoLocation pos;
     @Expose private int id;
     private double weight;
+    private double dist;
 
     private HashMap<Integer, EdgeData> destMap;
     private HashMap<Integer, EdgeData> sourceMap;
@@ -35,6 +36,13 @@ public class GraphNode implements NodeData, Serializable {
         return sourceMap;
     }
 
+    public void setDist(double dist) {
+        this.dist = dist;
+    }
+
+    public double getDist() {
+        return dist;
+    }
 
     public void addDest(EdgeData edge) {
         this.destMap.put(edge.getDest(), edge);

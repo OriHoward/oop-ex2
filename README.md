@@ -17,17 +17,20 @@ To run the GUI you need to have a graph with a valid format, this is an executio
 
 `java -jar graph-visualizer.jar data/G1.json `
 
-The UI supports running all the functionality that was requested:
-1. add/remove node
-2. add/remove edge
-3. center
-4. tsp
-5. shortestPath
-6. shortestPathDist
-7. isConnected
-8. loading and saving graph to disk
+In the Gui you are able to run all the algorithms implemented in the Exercise:
+1. load/save current graph
+2. edit the graph
+   1. add/remove an edge
+   2. add/remove a node
+3. run an algorithm - **after running each algorithm clean the graph before you execute the next one (click on clean)**
+   1. tsp - displays the shortest path that goes through the given nodes in an optimal way and highlights the nodes
+   2. center - highlights the center of the graph
+   3. shortestPath - the shortest path between two nodes and highlights it
+   4. isConnected - displays a message whether the graph is connected or not
+   5. shortestPathDist - displays the minimal distance between two nodes
+4. clean - cleaning the graph
+5. reset - resets the graph to it's initial state
 
-Each time you run an algorithm make sure you clean the graph.
 clicking on a node displays information about it
 ![](./misc/img.png)
 
@@ -134,24 +137,13 @@ A serializer class used to write the data to a json file
 
 ## Detailed execution details of the algorithms
 
-### Scenario 1 (1K nodes):
-* center: 3.2 sec
-* isConnected: 230ms
-
-### Scenario 2 (10K nodes):
-* center: 11.3 Min
-* isConnected: 1.3 sec
-
-### Scenario 3 (100K nodes):
-* center: a few hours
-* isConnected: 17.1s
-
-### Scenario 4 (1M nodes):
-generating the graph with 20 edges in average resulted in out of memory.  
-we tried 10 edges in average and resulted in out of memory as well.  
-the 1M nodes graph we generated has 5 edges in average.  
-
-* center: a few hours
-* isConnected: 55.2s
-
+| Graph Size | isConnected | Center  |
+|------------|-------------|---------|
+| 1000       |   380msec   | 1.6 sec |
+| 10k        |   1.9sec    | 4.1 Min |
+| 100k       |   17sec     |too long |
+| 1M         |   51sec     |too long |
+| G1 (16)    |   79msec    |  81msec  |
+| G2 (31)    |   84msec    |  90msec |
+| G3 (48)    |   93msec    | 101msec |
 

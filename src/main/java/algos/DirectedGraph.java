@@ -231,4 +231,9 @@ public class DirectedGraph implements DirectedWeightedGraph, Serializable {
             dstNode.addSrc(edge);
         }
     }
+
+    public double getNodeDist(int key){
+        GraphNode node = (GraphNode) this.getNode(key);
+        return node.getDist();
+    }
 }
