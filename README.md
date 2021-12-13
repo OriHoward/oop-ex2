@@ -17,29 +17,12 @@ To run the GUI you need to have a graph with a valid format, this is an executio
 
 `java -jar graph-visualizer.jar data/G1.json `
 
-The UI supports running all the functionality that was requested:
-1. add/remove node
-2. add/remove edge
-3. center
-4. tsp
-5. shortestPath
-6. shortestPathDist
-7. isConnected
-8. loading and saving graph to disk
-
-Each time you run an algorithm make sure you clean the graph.
-clicking on a node displays information about it
-![](./misc/img.png)
-
-
-## Using the GUI
-
 In the Gui you are able to run all the algorithms implemented in the Exercise:
 1. load/save current graph
 2. edit the graph
    1. add/remove an edge
    2. add/remove a node
-3. run an algorithm - after running each algorithm clean the graph before you execute the next one (click on clean)
+3. run an algorithm - **after running each algorithm clean the graph before you execute the next one (click on clean)**
    1. tsp - displays the shortest path that goes through the given nodes in an optimal way and highlights the nodes
    2. center - highlights the center of the graph
    3. shortestPath - the shortest path between two nodes and highlights it
@@ -48,7 +31,8 @@ In the Gui you are able to run all the algorithms implemented in the Exercise:
 4. clean - cleaning the graph
 5. reset - resets the graph to it's initial state
 
-clicking on a node displays information about it like its location and the id and so on
+clicking on a node displays information about it
+![](./misc/img.png)
 
 
 ## Idea of the GUI implementation
