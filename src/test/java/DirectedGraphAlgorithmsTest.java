@@ -73,7 +73,7 @@ class DirectedGraphAlgorithmsTest {
         algos.load("dataTests/centerTest.json");
         NodeData expectedNode = algos.getGraph().getNode(2);
         assertEquals(expectedNode, algos.center());
-        algos.load("dataTests/1000Nodes.json");
+        algos.load("data/1000Nodes.json");
         NodeData expectedNode2 = algos.getGraph().getNode(362);
         assertEquals(expectedNode2, algos.center());
     }

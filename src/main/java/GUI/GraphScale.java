@@ -49,10 +49,10 @@ public class GraphScale {
      * @return
      */
     public Point2D convert(Point2D point) {
-        double rangeOfX = Math.abs(this.minPoint.getX() - this.maxPoint.getX());
-        double rangeOfY = Math.abs(this.minPoint.getY() - this.maxPoint.getY());
-        double distX = Math.abs(this.maxPoint.getX() - point.getX());
-        double distY = Math.abs(this.maxPoint.getY() - point.getY());
+        double rangeOfX = this.maxPoint.getX() - this.minPoint.getX();
+        double rangeOfY =this.maxPoint.getY() - this.minPoint.getY();
+        double distX = point.getX() - this.minPoint.getX();
+        double distY = point.getY() - this.minPoint.getY();
         double currPercentageOfX = (distX/rangeOfX);
         double currPercentageOfY = (distY/rangeOfY);
         double newLocationX = this.width*currPercentageOfX;
